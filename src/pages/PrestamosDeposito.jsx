@@ -204,11 +204,13 @@ function PrestamoCard({ prestamo, pagos, onAddPago, onDeletePago }) {
 }
 
 export default function PrestamosDeposito() {
-  const currentYear = new Date().getFullYear();
-  const [anio, setAnio] = useState(0);
+  const today = new Date();
+  const firstOfYear = new Date(today.getFullYear(), 0, 1).toISOString().slice(0, 10);
+  const todayStr = today.toISOString().slice(0, 10);
+  const [desde, setDesde] = useState(firstOfYear);
+  const [hasta, setHasta] = useState(todayStr);
   const [pagoTarget, setPagoTarget] = useState(null);
   const qc = useQueryClient();
-  const years = Array.from({ length: 6 }, (_, i) => currentYear - 2 + i);
 
   const { data: depositos = [] } = useQuery({ queryKey: ["depositos"], queryFn: () => base44.entities.Deposito.list("-fecha", 500) });
   const { data: pagosPrestamo = [] } = useQuery({ queryKey: ["pagosPrestamo"], queryFn: () => base44.entities.PagoPrestamo.list("-fecha", 500) });
