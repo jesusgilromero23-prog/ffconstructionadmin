@@ -192,6 +192,40 @@ function ProjectCard({ proyecto, contratos, gastos, depositos, onEditProy, onDel
               )}
             </div>
 
+            {/* Deposits Section */}
+            {depositos.length > 0 && (
+              <div className="px-6 pb-2">
+                <h3 className="text-sm font-semibold text-foreground mb-3 flex items-center gap-2">
+                  Depósitos Recibidos
+                  <span className="text-xs font-normal text-blue-600 bg-blue-100 px-2 py-0.5 rounded-full">
+                    {depositos.length} pago(s) — {fmt(totalDepositosRecibidos)} cobrado(s)
+                  </span>
+                </h3>
+                <div className="overflow-x-auto rounded-xl border border-border mb-4">
+                  <table className="w-full text-xs">
+                    <thead>
+                      <tr className="border-b border-border bg-blue-50/50">
+                        <th className="text-left px-4 py-2 font-medium text-muted-foreground">Fecha</th>
+                        <th className="text-left px-4 py-2 font-medium text-muted-foreground">Descripción</th>
+                        <th className="text-left px-4 py-2 font-medium text-muted-foreground">Fuente</th>
+                        <th className="text-right px-4 py-2 font-medium text-muted-foreground">Monto</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {depositos.map(d => (
+                        <tr key={d.id} className="border-b border-border last:border-0 hover:bg-muted/20">
+                          <td className="px-4 py-2 text-muted-foreground">{format(new Date(d.fecha), "dd/MM/yy")}</td>
+                          <td className="px-4 py-2">{d.descripcion}</td>
+                          <td className="px-4 py-2 text-muted-foreground">{d.fuente || "—"}</td>
+                          <td className="px-4 py-2 text-right font-bold text-blue-600">{fmt(d.monto)}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
+
             {/* Expenses Section */}
             <div className="px-6 pb-4">
               <h3 className="text-sm font-semibold text-foreground mb-3">Gastos del Proyecto</h3>
