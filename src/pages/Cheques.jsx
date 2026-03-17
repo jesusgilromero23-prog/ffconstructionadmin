@@ -54,8 +54,9 @@ export default function Cheques() {
   });
 
   const filtered = cheques.filter(c => {
-    if (mes > 0 && c.mes !== mes) return false;
-    if (c.anio !== anio) return false;
+    if (!c.fecha_emision) return false;
+    if (desde && c.fecha_emision < desde) return false;
+    if (hasta && c.fecha_emision > hasta) return false;
     return true;
   });
 

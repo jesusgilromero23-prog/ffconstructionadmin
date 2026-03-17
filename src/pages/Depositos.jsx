@@ -153,8 +153,9 @@ export default function Depositos() {
   const deleteMut = useMutation({ mutationFn: id => base44.entities.Deposito.delete(id), onSuccess: () => qc.invalidateQueries({ queryKey: ["depositos"] }) });
 
   const filtered = depositos.filter(d => {
-    if (mes > 0 && d.mes !== mes) return false;
-    if (d.anio !== anio) return false;
+    if (!d.fecha) return false;
+    if (desde && d.fecha < desde) return false;
+    if (hasta && d.fecha > hasta) return false;
     return true;
   });
 

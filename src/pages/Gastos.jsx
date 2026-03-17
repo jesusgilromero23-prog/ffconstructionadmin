@@ -47,8 +47,9 @@ export default function Gastos() {
   });
 
   const filtered = gastos.filter(g => {
-    if (mes > 0 && g.mes !== mes) return false;
-    if (g.anio !== anio) return false;
+    if (!g.fecha) return false;
+    if (desde && g.fecha < desde) return false;
+    if (hasta && g.fecha > hasta) return false;
     return true;
   });
 
