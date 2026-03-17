@@ -1,19 +1,20 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
-import { 
-  ArrowDownCircle, Users, Package, Building2, ShieldCheck, 
+import {
+  ArrowDownCircle, Users, Package, Building2, ShieldCheck,
   CreditCard, Truck, Utensils, TrendingUp, Landmark, DollarSign, MinusCircle
 } from "lucide-react";
-import { 
-  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, 
-  PieChart, Pie, Cell, AreaChart, Area, Legend 
+import {
+  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
+  PieChart, Pie, Cell, AreaChart, Area, Legend
 } from "recharts";
 import PageHeader from "@/components/shared/PageHeader";
 import NotificationsPanel from "@/components/dashboard/NotificationsPanel";
 import AccessRequestBanner from "@/components/dashboard/AccessRequestBanner";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import PeriodFilter from "@/components/dashboard/PeriodFilter";
 import { motion } from "framer-motion";
+import { startOfWeek, endOfWeek } from "date-fns";
 
 const MESES_CORTOS = ["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"];
 const COLORS = ["hsl(226,70%,55%)","hsl(168,60%,45%)","hsl(262,60%,55%)","hsl(38,92%,50%)","hsl(0,84%,60%)","hsl(200,70%,50%)","hsl(300,50%,50%)"];
@@ -46,11 +47,26 @@ function KpiCard({ title, value, icon: Icon, color, sub, positive }) {
   );
 }
 
+function isInWeek(dateStr, weekStart) {
+  if (!dateStr) return false;
+  const d = new Date(dateStr);
+  const ws = new Date(weekStart);
+  const we = new Date(weekStart);
+  we.setDate(we.getDate() + 6);
+  return d >= ws && d <= we;
+}
+
 export default function Dashboard() {
   const currentYear = new Date().getFullYear();
+  const currentMonth = new Date().getMonth() + 1;
+  const todayWeekStart = startOfWeek(new Date(), { weekStartsOn: 1 });
+
+  const [vista, setVista] = useState("mensual");
   const [anio, setAnio] = useState(currentYear);
+  const [mes, setMes] = useState(currentMonth);
+  const [weekStart, setWeekStart] = useState(todayWeekStart);
+
   const { data: user } = useQuery({ queryKey: ["currentUser"], queryFn: () => base44.auth.me(), staleTime: 60000 });
-  const years = Array.from({ length: 5 }, (_, i) => currentYear - 2 + i);
   const fmt = (v) => `$${(v || 0).toLocaleString("en-US", { minimumFractionDigits: 2 })}`;
 
   const { data: depositos = [] } = useQuery({ queryKey: ["depositos"], queryFn: () => base44.entities.Deposito.list("-fecha", 500) });
@@ -62,49 +78,62 @@ export default function Dashboard() {
   const { data: pagosDeuda = [] } = useQuery({ queryKey: ["pagosDeuda"], queryFn: () => base44.entities.PagoDeuda.list("-fecha", 200) });
   const { data: contratos = [] } = useQuery({ queryKey: ["contratos"], queryFn: () => base44.entities.ContratoProyecto.list("-fecha_contrato", 200) });
 
-  // Filter by year
-  const fDep  = depositos.filter(d => d.anio === anio);
-  const fGas  = gastos.filter(g => g.anio === anio);
-  const fChe  = cheques.filter(c => c.anio === anio);
-  const fGP   = gastosProyecto.filter(g => g.anio === anio);
-  const fTar  = gastosTarjeta.filter(g => g.anio === anio);
-  const fPDeu = pagosDeuda.filter(p => p.anio === anio);
-  const fPres = prestamos.filter(p => p.anio === anio);
+  // Filter logic depending on vista
+  const filterItem = (item, dateField = "fecha") => {
+    const dateStr = item[dateField];
+    if (vista === "semanal") return isInWeek(dateStr, weekStart);
+    if (vista === "mensual") return item.mes === mes && item.anio === anio;
+    return item.anio === anio; // anual
+  };
 
-  // KPI calculations
-  const totalDepositos    = fDep.reduce((s,d) => s + (d.monto||0), 0);
-  const totalLabor        = [...fChe, ...fGP.filter(g => g.tipo_gasto === "labor"), ...fGP.filter(g => g.tipo_gasto === "labor_extra")].reduce((s,x) => s + (x.monto||0), 0);
-  const totalMateriales   = fGas.filter(g => g.categoria === "materiales").reduce((s,g) => s+(g.monto||0),0) + fGP.filter(g=>g.tipo_gasto==="material").reduce((s,g) => s+(g.monto||0),0);
-  const totalOficina      = fGas.filter(g => g.categoria === "oficina").reduce((s,g) => s+(g.monto||0),0);
-  const totalSeguros      = fGas.filter(g => g.categoria === "seguros").reduce((s,g) => s+(g.monto||0),0);
-  const totalTarjeta      = fTar.reduce((s,g) => s+(g.monto||0),0);
-  const totalVehiculos    = fGas.filter(g => g.categoria === "vehiculos").reduce((s,g) => s+(g.monto||0),0) + fGas.filter(g=>g.categoria==="gasolina").reduce((s,g) => s+(g.monto||0),0);
-  const totalServicios    = fGas.filter(g => g.categoria === "servicios").reduce((s,g) => s+(g.monto||0),0);
-  const totalComida       = fGas.filter(g => g.categoria === "comida").reduce((s,g) => s+(g.monto||0),0) + fTar.filter(g=>g.categoria==="comidas").reduce((s,g) => s+(g.monto||0),0);
-  const totalInversiones  = fGas.filter(g => g.categoria === "inversiones").reduce((s,g) => s+(g.monto||0),0);
-  const totalPagosDeuda   = fPDeu.reduce((s,p) => s+(p.monto||0),0);
-  const totalPrestamoAdq  = fPres.reduce((s,p) => s+(p.monto_adquirido||0),0);
-  const totalContratos    = contratos.filter(c => c.anio === anio).reduce((s,c) => s+(c.monto_contrato||0),0);
-  const totalGastosProySin = fGP.reduce((s,g) => s+(g.monto||0),0);
+  const fDep  = depositos.filter(d => filterItem(d));
+  const fGas  = gastos.filter(g => filterItem(g));
+  const fChe  = cheques.filter(c => filterItem(c, "fecha_emision"));
+  const fGP   = gastosProyecto.filter(g => filterItem(g));
+  const fTar  = gastosTarjeta.filter(g => filterItem(g));
+  const fPDeu = pagosDeuda.filter(p => filterItem(p));
+  const fPres = prestamos.filter(p => filterItem(p, "fecha_adquisicion"));
 
+  // KPI calculations — exact numbers from each entity
+  const totalDepositos   = fDep.reduce((s,d) => s + (d.monto||0), 0);
+  const totalLabor       = [
+    ...fChe,
+    ...fGP.filter(g => g.tipo_gasto === "labor" || g.tipo_gasto === "labor_extra")
+  ].reduce((s,x) => s + (x.monto||0), 0);
+  const totalMateriales  = fGas.filter(g=>g.categoria==="materiales").reduce((s,g)=>s+(g.monto||0),0) + fGP.filter(g=>g.tipo_gasto==="material").reduce((s,g)=>s+(g.monto||0),0);
+  const totalOficina     = fGas.filter(g=>g.categoria==="oficina").reduce((s,g)=>s+(g.monto||0),0);
+  const totalSeguros     = fGas.filter(g=>g.categoria==="seguros").reduce((s,g)=>s+(g.monto||0),0);
+  const totalTarjeta     = fTar.reduce((s,g)=>s+(g.monto||0),0);
+  const totalVehiculos   = fGas.filter(g=>g.categoria==="vehiculos"||g.categoria==="gasolina").reduce((s,g)=>s+(g.monto||0),0);
+  const totalServicios   = fGas.filter(g=>g.categoria==="servicios").reduce((s,g)=>s+(g.monto||0),0);
+  const totalComida      = fGas.filter(g=>g.categoria==="comida").reduce((s,g)=>s+(g.monto||0),0);
+  const totalInversiones = fGas.filter(g=>g.categoria==="inversiones").reduce((s,g)=>s+(g.monto||0),0);
+  const totalPagosDeuda  = fPDeu.reduce((s,p)=>s+(p.monto||0),0);
+  const totalPrestamoAdq = fPres.reduce((s,p)=>s+(p.monto_adquirido||0),0);
+  const totalPrestamoDep = fDep.filter(d=>d.tipo==="prestamo").reduce((s,d)=>s+(d.monto||0),0);
+  const totalContratos   = contratos.filter(c => vista === "anual" ? c.anio === anio : vista === "mensual" ? c.mes === mes && c.anio === anio : true).reduce((s,c)=>s+(c.monto_contrato||0),0);
+  const totalGastosProyS = fGP.reduce((s,g)=>s+(g.monto||0),0);
+
+  // Egresos = todos los gastos, excluye préstamos recibidos (esos son ingresos de deuda)
   const totalEgresos = totalLabor + totalMateriales + totalOficina + totalSeguros + totalTarjeta + totalVehiculos + totalServicios + totalComida + totalInversiones + totalPagosDeuda + fGas.filter(g=>g.categoria==="otros").reduce((s,g)=>s+(g.monto||0),0);
-  const utilidad = totalDepositos - totalEgresos;
+  // Ingresos reales = depósitos excluyendo préstamos para la utilidad operativa
+  const ingresosOperativos = totalDepositos - totalPrestamoDep;
+  const utilidad = ingresosOperativos - totalEgresos;
 
-  // Monthly trend
-  const monthly = MESES_CORTOS.map((mes, i) => {
-    const m = i + 1;
-    const ingresos = fDep.filter(d => d.mes === m).reduce((s,d) => s+(d.monto||0),0);
+  // Monthly trend for annual view chart
+  const monthly = MESES_CORTOS.map((m, i) => {
+    const mn = i + 1;
+    const ingresos = depositos.filter(d=>d.anio===anio&&d.mes===mn).reduce((s,d)=>s+(d.monto||0),0);
     const egresos = [
-      ...fGas.filter(g => g.mes === m),
-      ...fChe.filter(c => c.mes === m),
-      ...fGP.filter(g => g.mes === m),
-      ...fTar.filter(g => g.mes === m),
-      ...fPDeu.filter(p => p.mes === m),
-    ].reduce((s,x) => s+(x.monto||0),0);
-    return { mes, ingresos, egresos, utilidad: ingresos - egresos };
+      ...gastos.filter(g=>g.anio===anio&&g.mes===mn),
+      ...cheques.filter(c=>c.anio===anio&&c.mes===mn),
+      ...gastosProyecto.filter(g=>g.anio===anio&&g.mes===mn),
+      ...gastosTarjeta.filter(g=>g.anio===anio&&g.mes===mn),
+      ...pagosDeuda.filter(p=>p.anio===anio&&p.mes===mn),
+    ].reduce((s,x)=>s+(x.monto||0),0);
+    return { mes: m, ingresos, egresos, utilidad: ingresos - egresos };
   });
 
-  // Pie breakdown egresos
   const pieData = [
     { name: "Labor", value: totalLabor },
     { name: "Materiales", value: totalMateriales },
@@ -118,6 +147,10 @@ export default function Dashboard() {
     { name: "Pagos Deuda", value: totalPagosDeuda },
   ].filter(d => d.value > 0);
 
+  const periodLabel = vista === "anual" ? `Año ${anio}` : vista === "mensual"
+    ? `${["","Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"][mes]} ${anio}`
+    : `Semana del ${weekStart.toLocaleDateString("es-MX", { day: "2-digit", month: "short" })}`;
+
   const kpis = [
     { title: "Depósitos / Ingresos", value: fmt(totalDepositos), icon: ArrowDownCircle, color: "green", positive: true, sub: "Dinero entrante" },
     { title: "Labor (Empleados)", value: fmt(totalLabor), icon: Users, color: "blue", positive: false, sub: "Cheques + nóminas" },
@@ -126,40 +159,44 @@ export default function Dashboard() {
     { title: "Seguros", value: fmt(totalSeguros), icon: ShieldCheck, color: "purple", positive: false, sub: "Pólizas y primas" },
     { title: "Tarjetas Crédito", value: fmt(totalTarjeta), icon: CreditCard, color: "red", positive: false, sub: "Cargos a tarjetas" },
     { title: "Vehículos / Gasolina", value: fmt(totalVehiculos), icon: Truck, color: "slate", positive: false, sub: "Flota + combustible" },
-    { title: "Servicios", value: fmt(totalServicios), icon: Landmark, color: "blue", positive: false, sub: "Servicios contratados" },
+    { title: "Servicios / Bills", value: fmt(totalServicios), icon: Landmark, color: "blue", positive: false, sub: "Servicios contratados" },
     { title: "Comida", value: fmt(totalComida), icon: Utensils, color: "amber", positive: false, sub: "Alimentos y dietas" },
     { title: "Inversiones", value: fmt(totalInversiones), icon: TrendingUp, color: "green", positive: null, sub: "Capital invertido" },
     { title: "Pagos de Deuda", value: fmt(totalPagosDeuda), icon: MinusCircle, color: "red", positive: false, sub: "Préstamos y créditos" },
-    { title: "Crédito Adquirido", value: fmt(totalPrestamoAdq), icon: DollarSign, color: "purple", positive: null, sub: "Préstamos recibidos" },
+    { title: "Préstamos Recibidos", value: fmt(totalPrestamoDep), icon: DollarSign, color: "purple", positive: null, sub: "Depósitos tipo préstamo" },
   ];
 
   return (
     <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto">
       <PageHeader title="Dashboard Contable" subtitle="Resumen financiero completo de la empresa">
-        <Select value={String(anio)} onValueChange={(v) => setAnio(Number(v))}>
-          <SelectTrigger className="w-24 bg-card"><SelectValue /></SelectTrigger>
-          <SelectContent>{years.map(y => <SelectItem key={y} value={String(y)}>{y}</SelectItem>)}</SelectContent>
-        </Select>
+        <PeriodFilter
+          vista={vista} setVista={setVista}
+          anio={anio} setAnio={setAnio}
+          mes={mes} setMes={setMes}
+          weekStart={weekStart} setWeekStart={setWeekStart}
+        />
       </PageHeader>
 
       {user?.role !== "admin" && <AccessRequestBanner user={user} />}
-      <NotificationsPanel
-        prestamos={prestamos}
-        cheques={cheques}
-        contratos={contratos}
-        gastosProyecto={gastosProyecto}
-      />
+      <NotificationsPanel prestamos={prestamos} cheques={cheques} contratos={contratos} gastosProyecto={gastosProyecto} />
 
       {/* Utilidad Banner */}
       <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}
-        className={`rounded-2xl p-5 mb-6 flex items-center justify-between border shadow-sm ${utilidad >= 0 ? 'bg-emerald-50 border-emerald-200' : 'bg-red-50 border-red-200'}`}>
-        <div>
-          <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Resultado Neto {anio}</p>
-          <p className={`text-3xl font-bold mt-1 ${utilidad >= 0 ? 'text-emerald-700' : 'text-red-600'}`}>{fmt(utilidad)}</p>
-          <p className="text-xs text-muted-foreground mt-1">Ingresos {fmt(totalDepositos)} — Egresos {fmt(totalEgresos)}</p>
-        </div>
-        <div className={`text-5xl font-black opacity-20 ${utilidad >= 0 ? 'text-emerald-600' : 'text-red-500'}`}>
-          {utilidad >= 0 ? "+" : "−"}
+        className={`rounded-2xl p-5 mb-6 border shadow-sm ${utilidad >= 0 ? 'bg-emerald-50 border-emerald-200' : 'bg-red-50 border-red-200'}`}>
+        <div className="flex items-center justify-between">
+          <div>
+            <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+              Resultado Neto — {periodLabel}
+            </p>
+            <p className={`text-3xl font-bold mt-1 ${utilidad >= 0 ? 'text-emerald-700' : 'text-red-600'}`}>{fmt(utilidad)}</p>
+            <p className="text-xs text-muted-foreground mt-1">
+              Ingresos operativos {fmt(ingresosOperativos)} — Egresos {fmt(totalEgresos)}
+              {totalPrestamoDep > 0 && <span className="ml-2 text-blue-600">(+{fmt(totalPrestamoDep)} préstamos excluidos)</span>}
+            </p>
+          </div>
+          <div className={`text-5xl font-black opacity-20 ${utilidad >= 0 ? 'text-emerald-600' : 'text-red-500'}`}>
+            {utilidad >= 0 ? "+" : "−"}
+          </div>
         </div>
       </motion.div>
 
@@ -172,9 +209,8 @@ export default function Dashboard() {
         ))}
       </div>
 
-      {/* Charts Row 1 */}
+      {/* Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
-        {/* Area chart ingresos vs egresos */}
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
           className="lg:col-span-2 bg-card rounded-2xl border border-border p-6 shadow-sm">
           <h3 className="text-sm font-semibold mb-4">Ingresos vs Egresos — Mensual {anio}</h3>
@@ -203,7 +239,6 @@ export default function Dashboard() {
           </div>
         </motion.div>
 
-        {/* Pie egresos */}
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}
           className="bg-card rounded-2xl border border-border p-6 shadow-sm">
           <h3 className="text-sm font-semibold mb-4">Distribución de Egresos</h3>
@@ -231,7 +266,6 @@ export default function Dashboard() {
         </motion.div>
       </div>
 
-      {/* Bar chart utilidad mensual */}
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35 }}
         className="bg-card rounded-2xl border border-border p-6 shadow-sm mb-6">
         <h3 className="text-sm font-semibold mb-4">Utilidad Neta Mensual {anio}</h3>
@@ -252,7 +286,6 @@ export default function Dashboard() {
         </div>
       </motion.div>
 
-      {/* Proyectos summary */}
       {contratos.length > 0 && (
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}
           className="bg-card rounded-2xl border border-border p-6 shadow-sm">
@@ -264,11 +297,11 @@ export default function Dashboard() {
             </div>
             <div className="bg-red-50 rounded-xl p-4 border border-red-100">
               <p className="text-xs text-muted-foreground">Total Gastos Proyectos</p>
-              <p className="text-xl font-bold text-red-600 mt-1">{fmt(totalGastosProySin)}</p>
+              <p className="text-xl font-bold text-red-600 mt-1">{fmt(totalGastosProyS)}</p>
             </div>
-            <div className={`rounded-xl p-4 border ${totalContratos - totalGastosProySin >= 0 ? 'bg-blue-50 border-blue-100' : 'bg-orange-50 border-orange-100'}`}>
+            <div className={`rounded-xl p-4 border ${totalContratos - totalGastosProyS >= 0 ? 'bg-blue-50 border-blue-100' : 'bg-orange-50 border-orange-100'}`}>
               <p className="text-xs text-muted-foreground">Ganancia Proyectos</p>
-              <p className={`text-xl font-bold mt-1 ${totalContratos - totalGastosProySin >= 0 ? 'text-blue-700' : 'text-orange-600'}`}>{fmt(totalContratos - totalGastosProySin)}</p>
+              <p className={`text-xl font-bold mt-1 ${totalContratos - totalGastosProyS >= 0 ? 'text-blue-700' : 'text-orange-600'}`}>{fmt(totalContratos - totalGastosProyS)}</p>
             </div>
           </div>
         </motion.div>
