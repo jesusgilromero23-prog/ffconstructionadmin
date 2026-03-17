@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Plus, Pencil, Trash2 } from "lucide-react";
 import { format } from "date-fns";
 import PageHeader from "@/components/shared/PageHeader";
-import MonthYearFilter from "@/components/shared/MonthYearFilter";
+import DateRangeFilter from "@/components/shared/DateRangeFilter";
 import EmptyState from "@/components/shared/EmptyState";
 import ProyectoFormDialog from "@/components/proyectos/ProyectoFormDialog";
 import { motion, AnimatePresence } from "framer-motion";

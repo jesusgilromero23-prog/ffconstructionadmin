@@ -9,7 +9,7 @@ import AccessGuard from "@/components/shared/AccessGuard";
 import { generateReciboCheque, generateListadoCheques } from "@/lib/pdfGenerator";
 import { format } from "date-fns";
 import PageHeader from "@/components/shared/PageHeader";
-import MonthYearFilter from "@/components/shared/MonthYearFilter";
+import DateRangeFilter from "@/components/shared/DateRangeFilter";
 import EmptyState from "@/components/shared/EmptyState";
 import ChequeFormDialog from "@/components/cheques/ChequeFormDialog";
 import ImportChequesDialog from "@/components/cheques/ImportChequesDialog";

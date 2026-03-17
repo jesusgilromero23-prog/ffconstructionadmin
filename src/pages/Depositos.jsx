@@ -13,7 +13,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import PageHeader from "@/components/shared/PageHeader";
-import MonthYearFilter from "@/components/shared/MonthYearFilter";
+import DateRangeFilter from "@/components/shared/DateRangeFilter";
 import EmptyState from "@/components/shared/EmptyState";
 import { motion, AnimatePresence } from "framer-motion";
 
