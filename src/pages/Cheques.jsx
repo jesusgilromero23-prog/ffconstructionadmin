@@ -127,6 +127,10 @@ export default function Cheques() {
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-border bg-muted/50">
+                  <th className="px-4 py-3">
+                    <input type="checkbox" checked={filtered.length > 0 && selectedIds.size === filtered.length}
+                      onChange={toggleAll} className="w-4 h-4 rounded cursor-pointer accent-primary" />
+                  </th>
                   <th className="text-left px-5 py-3 font-medium text-muted-foreground">No.</th>
                   <th className="text-left px-5 py-3 font-medium text-muted-foreground">Fecha</th>
                   <th className="text-left px-5 py-3 font-medium text-muted-foreground">Beneficiario</th>
