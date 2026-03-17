@@ -4,7 +4,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { MessageCircle, X, Send, Loader2, Bot } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
-const WELCOME = "¡Hola! Soy el **Administrador Jesus** 👋\n\nEn qué te puedo ayudar. Indícame tus dudas y en breve serán respondidas por **Jesús Gil**.\n\nTambién puedo intentar responder preguntas frecuentes de inmediato.";
+const WELCOME = "¡Hola! 👋 Soy el asistente de **ContaControl**.\n\n¿En qué te puedo ayudar hoy? Puedo responder preguntas generales de contabilidad, o si prefieres que **Jesús Gil** te atienda personalmente, escríbeme y él te responderá a la brevedad.";
 
 export default function ChatBubble({ user }) {
   const [open, setOpen] = useState(false);
