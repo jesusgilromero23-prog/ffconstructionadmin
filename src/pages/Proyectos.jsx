@@ -312,6 +312,7 @@ export default function Proyectos() {
             proyecto={proy}
             contratos={contratos.filter(c => c.proyecto_nombre === proy.nombre)}
             gastos={gastos.filter(g => g.proyecto === proy.nombre)}
+            depositos={depositos.filter(d => d.proyecto_nombre === proy.nombre)}
             onEditProy={(p) => { setEditingProy(p); setShowProyForm(true); }}
             onDeleteProy={(id) => proyMut.delete.mutate(id)}
             onEditContrato={(c) => { setEditingContrato(c); setShowContratoForm(true); }}
