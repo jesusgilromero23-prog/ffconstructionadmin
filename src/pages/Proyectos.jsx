@@ -4,6 +4,8 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Plus, Pencil, Trash2, ChevronDown, ChevronUp, TrendingUp, TrendingDown, Download } from "lucide-react";
+import { useEditPermission } from "@/hooks/useEditPermission";
+import AccessGuard from "@/components/shared/AccessGuard";
 import { generateProyectoPDF } from "@/lib/pdfGenerator";
 import { format } from "date-fns";
 import PageHeader from "@/components/shared/PageHeader";
