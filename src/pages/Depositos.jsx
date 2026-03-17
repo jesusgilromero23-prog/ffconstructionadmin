@@ -186,6 +186,7 @@ export default function Depositos() {
                   <th className="text-left px-5 py-3 font-medium text-muted-foreground">Tipo</th>
                   <th className="text-left px-5 py-3 font-medium text-muted-foreground">Fuente</th>
                   <th className="text-left px-5 py-3 font-medium text-muted-foreground">Banco</th>
+                  <th className="text-left px-5 py-3 font-medium text-muted-foreground">Proyecto</th>
                   <th className="text-right px-5 py-3 font-medium text-muted-foreground">Monto</th>
                   <th className="text-right px-5 py-3 font-medium text-muted-foreground">Acciones</th>
                 </tr>
