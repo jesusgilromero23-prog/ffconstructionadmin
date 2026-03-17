@@ -178,6 +178,17 @@ export default function Dashboard() {
           mes={mes} setMes={setMes}
           weekStart={weekStart} setWeekStart={setWeekStart}
         />
+        <Button variant="outline" size="sm" className="gap-2" onClick={() => generateDashboardPDF({
+          periodLabel,
+          fDep, fGas, fChe, fGP, fTar, fPDeu,
+          kpis: {
+            totalDepositos, totalLabor, totalMateriales, totalOficina,
+            totalSeguros, totalTarjeta, totalVehiculos, totalServicios,
+            totalComida, totalInversiones, totalPagosDeuda, totalEgresos, utilidad
+          }
+        })}>
+          <Download className="w-4 h-4" /> PDF
+        </Button>
       </PageHeader>
 
       {user?.role !== "admin" && <AccessRequestBanner user={user} />}
