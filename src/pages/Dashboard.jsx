@@ -11,6 +11,7 @@ import {
 } from "recharts";
 import PageHeader from "@/components/shared/PageHeader";
 import NotificationsPanel from "@/components/dashboard/NotificationsPanel";
+import ChequesStatsPanel from "@/components/dashboard/ChequesStatsPanel";
 import AccessRequestBanner from "@/components/dashboard/AccessRequestBanner";
 import PeriodFilter from "@/components/dashboard/PeriodFilter";
 import { motion } from "framer-motion";
