@@ -48,11 +48,13 @@ const tipoGastoColors = {
   labor_extra: "bg-orange-100 text-orange-700",
 };
 
-function ProjectCard({ proyecto, contratos, gastos, onEditProy, onDeleteProy, onEditContrato, onDeleteContrato, onNewContrato, canEdit }) {
+function ProjectCard({ proyecto, contratos, gastos, depositos, onEditProy, onDeleteProy, onEditContrato, onDeleteContrato, onNewContrato, canEdit }) {
   const [expanded, setExpanded] = useState(true);
   const fmt = (v) => `$${(v || 0).toLocaleString("en-US", { minimumFractionDigits: 2 })}`;
 
   const totalContrato = contratos.reduce((s, c) => s + (c.monto_contrato || 0), 0);
+  const totalDepositosRecibidos = depositos.reduce((s, d) => s + (d.monto || 0), 0);
+  const saldoPorCobrar = totalContrato - totalDepositosRecibidos;
   const laborGastos = gastos.filter(g => g.tipo_gasto === "labor" || g.tipo_gasto === "labor_extra");
   const materialGastos = gastos.filter(g => g.tipo_gasto === "material");
   const operativoGastos = gastos.filter(g => g.tipo_gasto === "operativo");
