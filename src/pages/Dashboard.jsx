@@ -3,8 +3,10 @@ import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
 import {
   ArrowDownCircle, Users, Package, Building2, ShieldCheck,
-  CreditCard, Truck, Utensils, TrendingUp, Landmark, DollarSign, MinusCircle
+  CreditCard, Truck, Utensils, TrendingUp, Landmark, DollarSign, MinusCircle, Download
 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { generateDashboardPDF } from "@/lib/pdfGenerator";
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
   PieChart, Pie, Cell, AreaChart, Area, Legend
