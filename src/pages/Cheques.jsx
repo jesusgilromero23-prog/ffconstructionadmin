@@ -75,7 +75,7 @@ export default function Cheques() {
 
   const handlePdfSeleccionados = () => {
     const lista = selectedCheques.length > 0 ? selectedCheques : filtered;
-    generateListadoCheques({ cheques: lista, mes, anio });
+    generateListadoCheques({ cheques: lista, desde, hasta });
   };
 
   const total = filtered.reduce((s, c) => s + (c.monto || 0), 0);
