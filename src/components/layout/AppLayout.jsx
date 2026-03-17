@@ -15,8 +15,17 @@ export default function AppLayout() {
   return (
     <div className="flex h-screen overflow-hidden">
       <Sidebar />
-      <main className="flex-1 overflow-y-auto">
-        <Outlet />
+      <main className="flex-1 overflow-y-auto flex flex-col">
+        <div className="flex-1">
+          <Outlet />
+        </div>
+        <footer className="px-6 py-3 border-t border-border bg-card/50 flex items-center justify-center">
+          <p className="text-[11px] text-muted-foreground text-center">
+            Diseñado y desarrollado por{" "}
+            <span className="font-semibold text-foreground">Jesús Gil</span>
+            {" "}— ContaControl © {new Date().getFullYear()}
+          </p>
+        </footer>
       </main>
       <ChatBubble user={user} />
     </div>
