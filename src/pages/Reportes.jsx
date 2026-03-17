@@ -22,6 +22,8 @@ export default function Reportes() {
   const { data: cheques = [] } = useQuery({ queryKey: ["cheques"], queryFn: () => base44.entities.Cheque.list("-fecha_emision", 500) });
   const { data: gastosProyecto = [] } = useQuery({ queryKey: ["gastosProyecto"], queryFn: () => base44.entities.GastoProyecto.list("-fecha", 500) });
   const { data: gastosTarjeta = [] } = useQuery({ queryKey: ["gastosTarjeta"], queryFn: () => base44.entities.GastoTarjeta.list("-fecha", 500) });
+  const { data: depositos = [] } = useQuery({ queryKey: ["depositos"], queryFn: () => base44.entities.Deposito.list("-fecha", 500) });
+  const { data: prestamos = [] } = useQuery({ queryKey: ["prestamos"], queryFn: () => base44.entities.Prestamo.list("-fecha_adquisicion", 200) });
 
   const fG = gastos.filter(g => g.anio === anio);
   const fC = cheques.filter(c => c.anio === anio);
