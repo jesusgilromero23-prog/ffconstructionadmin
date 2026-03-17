@@ -8,10 +8,12 @@ import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 
 import AppLayout from './components/layout/AppLayout';
 import Dashboard from './pages/Dashboard';
+import Depositos from './pages/Depositos';
 import Gastos from './pages/Gastos';
 import Cheques from './pages/Cheques';
-import Proyectos from './pages/Proyectos';
 import Tarjetas from './pages/Tarjetas';
+import Proyectos from './pages/Proyectos';
+import GastosProyecto from './pages/GastosProyecto';
 import Reportes from './pages/Reportes';
 
 const AuthenticatedApp = () => {
@@ -39,10 +41,12 @@ const AuthenticatedApp = () => {
       <Route path="/" element={<Navigate to="/Dashboard" replace />} />
       <Route element={<AppLayout />}>
         <Route path="/Dashboard" element={<Dashboard />} />
+        <Route path="/Depositos" element={<Depositos />} />
         <Route path="/Gastos" element={<Gastos />} />
         <Route path="/Cheques" element={<Cheques />} />
-        <Route path="/Proyectos" element={<Proyectos />} />
         <Route path="/Tarjetas" element={<Tarjetas />} />
+        <Route path="/Proyectos" element={<Proyectos />} />
+        <Route path="/GastosProyecto" element={<GastosProyecto />} />
         <Route path="/Reportes" element={<Reportes />} />
       </Route>
       <Route path="*" element={<PageNotFound />} />

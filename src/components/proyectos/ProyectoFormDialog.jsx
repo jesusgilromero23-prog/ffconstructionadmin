@@ -10,6 +10,7 @@ const TIPOS = [
   { value: "labor", label: "Labor" },
   { value: "material", label: "Material" },
   { value: "operativo", label: "Gasto Operativo" },
+  { value: "labor_extra", label: "Labor Extra" },
 ];
 
 export default function ProyectoFormDialog({ open, onClose, onSave, gasto, isLoading }) {
