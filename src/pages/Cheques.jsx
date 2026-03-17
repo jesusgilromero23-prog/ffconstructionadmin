@@ -28,6 +28,7 @@ export default function Cheques() {
   const [editing, setEditing] = useState(null);
   const [mes, setMes] = useState(new Date().getMonth() + 1);
   const [anio, setAnio] = useState(new Date().getFullYear());
+  const [selectedIds, setSelectedIds] = useState(new Set());
   const qc = useQueryClient();
 
   const { canEdit, user } = useEditPermission();
