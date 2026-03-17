@@ -21,8 +21,11 @@ const tipoColors = {
 export default function GastosProyecto() {
   const [showForm, setShowForm] = useState(false);
   const [editing, setEditing] = useState(null);
-  const [mes, setMes] = useState(new Date().getMonth() + 1);
-  const [anio, setAnio] = useState(new Date().getFullYear());
+  const today = new Date();
+  const firstOfMonth = new Date(today.getFullYear(), today.getMonth(), 1).toISOString().slice(0, 10);
+  const todayStr = today.toISOString().slice(0, 10);
+  const [desde, setDesde] = useState(firstOfMonth);
+  const [hasta, setHasta] = useState(todayStr);
   const qc = useQueryClient();
   const fmt = (v) => `$${(v||0).toLocaleString("en-US", { minimumFractionDigits: 2 })}`;
 
