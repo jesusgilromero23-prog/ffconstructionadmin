@@ -251,14 +251,7 @@ export default function PrestamosDeposito() {
   return (
     <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto">
       <PageHeader title="Control de Préstamos" subtitle="Seguimiento de préstamos recibidos y sus pagos">
-        <select
-          value={anio}
-          onChange={e => setAnio(Number(e.target.value))}
-          className="text-sm border border-input rounded-lg px-3 py-1.5 bg-card"
-        >
-          <option value={0}>Todos los años</option>
-          {years.map(y => <option key={y} value={y}>{y}</option>)}
-        </select>
+        <DateRangeFilter desde={desde} hasta={hasta} onDesdeChange={setDesde} onHastaChange={setHasta} />
       </PageHeader>
 
       {/* Summary */}
