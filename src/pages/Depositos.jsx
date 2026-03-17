@@ -1,0 +1,184 @@
+import React, { useState } from "react";
+import { base44 } from "@/api/base44Client";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Plus, Pencil, Trash2 } from "lucide-react";
+import { format } from "date-fns";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import PageHeader from "@/components/shared/PageHeader";
+import MonthYearFilter from "@/components/shared/MonthYearFilter";
+import EmptyState from "@/components/shared/EmptyState";
+import { motion, AnimatePresence } from "framer-motion";
+
+const tipoColors = {
+  pago_cliente: "bg-emerald-100 text-emerald-700",
+  deposito_bancario: "bg-blue-100 text-blue-700",
+  inversion: "bg-purple-100 text-purple-700",
+  otro: "bg-gray-100 text-gray-700",
+};
+
+function DepositoForm({ open, onClose, onSave, deposito }) {
+  const [form, setForm] = useState(deposito || {
+    descripcion: "", monto: "", tipo: "pago_cliente",
+    fecha: new Date().toISOString().slice(0, 10), fuente: "", banco: "", notas: ""
+  });
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const fecha = new Date(form.fecha);
+    onSave({ ...form, monto: Number(form.monto), mes: fecha.getMonth() + 1, anio: fecha.getFullYear() });
+  };
+  return (
+    <Dialog open={open} onOpenChange={onClose}>
+      <DialogContent className="sm:max-w-md">
+        <DialogHeader><DialogTitle>{deposito ? "Editar Depósito" : "Nuevo Depósito"}</DialogTitle></DialogHeader>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="space-y-2">
+            <Label>Descripción *</Label>
+            <Input value={form.descripcion} onChange={e => setForm({...form, descripcion: e.target.value})} required />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label>Tipo</Label>
+              <Select value={form.tipo} onValueChange={v => setForm({...form, tipo: v})}>
+                <SelectTrigger><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="pago_cliente">Pago Cliente</SelectItem>
+                  <SelectItem value="deposito_bancario">Depósito Bancario</SelectItem>
+                  <SelectItem value="inversion">Inversión</SelectItem>
+                  <SelectItem value="otro">Otro</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label>Monto *</Label>
+              <Input type="number" step="0.01" value={form.monto} onChange={e => setForm({...form, monto: e.target.value})} required />
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label>Fecha *</Label>
+              <Input type="date" value={form.fecha} onChange={e => setForm({...form, fecha: e.target.value})} required />
+            </div>
+            <div className="space-y-2">
+              <Label>Fuente / Cliente</Label>
+              <Input value={form.fuente} onChange={e => setForm({...form, fuente: e.target.value})} />
+            </div>
+          </div>
+          <div className="space-y-2">
+            <Label>Banco</Label>
+            <Input value={form.banco} onChange={e => setForm({...form, banco: e.target.value})} />
+          </div>
+          <div className="space-y-2">
+            <Label>Notas</Label>
+            <Textarea value={form.notas} onChange={e => setForm({...form, notas: e.target.value})} className="h-16" />
+          </div>
+          <div className="flex justify-end gap-3 pt-2">
+            <Button type="button" variant="outline" onClick={onClose}>Cancelar</Button>
+            <Button type="submit">{deposito ? "Actualizar" : "Guardar"}</Button>
+          </div>
+        </form>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+export default function Depositos() {
+  const [showForm, setShowForm] = useState(false);
+  const [editing, setEditing] = useState(null);
+  const [mes, setMes] = useState(new Date().getMonth() + 1);
+  const [anio, setAnio] = useState(new Date().getFullYear());
+  const qc = useQueryClient();
+  const fmt = (v) => `$${(v||0).toLocaleString("en-US", { minimumFractionDigits: 2 })}`;
+
+  const { data: depositos = [] } = useQuery({ queryKey: ["depositos"], queryFn: () => base44.entities.Deposito.list("-fecha", 500) });
+
+  const createMut = useMutation({ mutationFn: d => base44.entities.Deposito.create(d), onSuccess: () => { qc.invalidateQueries({ queryKey: ["depositos"] }); setShowForm(false); } });
+  const updateMut = useMutation({ mutationFn: ({ id, data }) => base44.entities.Deposito.update(id, data), onSuccess: () => { qc.invalidateQueries({ queryKey: ["depositos"] }); setShowForm(false); setEditing(null); } });
+  const deleteMut = useMutation({ mutationFn: id => base44.entities.Deposito.delete(id), onSuccess: () => qc.invalidateQueries({ queryKey: ["depositos"] }) });
+
+  const filtered = depositos.filter(d => {
+    if (mes > 0 && d.mes !== mes) return false;
+    if (d.anio !== anio) return false;
+    return true;
+  });
+
+  const total = filtered.reduce((s, d) => s + (d.monto || 0), 0);
+
+  return (
+    <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto">
+      <PageHeader title="Depósitos / Ingresos" subtitle="Registro de dinero entrante a la empresa">
+        <MonthYearFilter mes={mes} anio={anio} onMesChange={setMes} onAnioChange={setAnio} />
+        <Button onClick={() => { setEditing(null); setShowForm(true); }} className="gap-2">
+          <Plus className="w-4 h-4" /> Nuevo Depósito
+        </Button>
+      </PageHeader>
+
+      <div className="bg-emerald-50 border border-emerald-200 rounded-2xl p-5 mb-6 flex items-center justify-between">
+        <span className="text-sm font-medium text-emerald-700">Total ingresos del período</span>
+        <span className="text-2xl font-bold text-emerald-700">{fmt(total)}</span>
+      </div>
+
+      {filtered.length === 0 ? <EmptyState message="No hay depósitos registrados en este período" /> : (
+        <div className="bg-card rounded-2xl border border-border overflow-hidden shadow-sm">
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-border bg-muted/50">
+                  <th className="text-left px-5 py-3 font-medium text-muted-foreground">Fecha</th>
+                  <th className="text-left px-5 py-3 font-medium text-muted-foreground">Descripción</th>
+                  <th className="text-left px-5 py-3 font-medium text-muted-foreground">Tipo</th>
+                  <th className="text-left px-5 py-3 font-medium text-muted-foreground">Fuente</th>
+                  <th className="text-left px-5 py-3 font-medium text-muted-foreground">Banco</th>
+                  <th className="text-right px-5 py-3 font-medium text-muted-foreground">Monto</th>
+                  <th className="text-right px-5 py-3 font-medium text-muted-foreground">Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                <AnimatePresence>
+                  {filtered.map(d => (
+                    <motion.tr key={d.id} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+                      className="border-b border-border last:border-0 hover:bg-muted/30 transition-colors">
+                      <td className="px-5 py-3.5 text-muted-foreground">{format(new Date(d.fecha), "dd/MM/yyyy")}</td>
+                      <td className="px-5 py-3.5 font-medium">{d.descripcion}</td>
+                      <td className="px-5 py-3.5"><Badge className={tipoColors[d.tipo]}>{d.tipo?.replace("_", " ")}</Badge></td>
+                      <td className="px-5 py-3.5 text-muted-foreground">{d.fuente || "—"}</td>
+                      <td className="px-5 py-3.5 text-muted-foreground">{d.banco || "—"}</td>
+                      <td className="px-5 py-3.5 text-right font-bold text-emerald-600">{fmt(d.monto)}</td>
+                      <td className="px-5 py-3.5 text-right">
+                        <div className="flex justify-end gap-1">
+                          <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => { setEditing(d); setShowForm(true); }}>
+                            <Pencil className="w-3.5 h-3.5" />
+                          </Button>
+                          <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive" onClick={() => deleteMut.mutate(d.id)}>
+                            <Trash2 className="w-3.5 h-3.5" />
+                          </Button>
+                        </div>
+                      </td>
+                    </motion.tr>
+                  ))}
+                </AnimatePresence>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+
+      {showForm && (
+        <DepositoForm
+          open={showForm}
+          onClose={() => { setShowForm(false); setEditing(null); }}
+          onSave={(data) => {
+            if (editing) updateMut.mutate({ id: editing.id, data });
+            else createMut.mutate(data);
+          }}
+          deposito={editing}
+        />
+      )}
+    </div>
+  );
+}
