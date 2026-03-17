@@ -71,9 +71,14 @@ export default function Cheques() {
           <Download className="w-4 h-4" /> PDF Listado
         </Button>
         {canEdit && (
-          <Button onClick={() => { setEditing(null); setShowForm(true); }} className="gap-2">
-            <Plus className="w-4 h-4" /> Nuevo Cheque
-          </Button>
+          <>
+            <Button variant="outline" className="gap-2" onClick={() => setShowImport(true)}>
+              <Sheet className="w-4 h-4 text-emerald-600" /> Importar Sheets
+            </Button>
+            <Button onClick={() => { setEditing(null); setShowForm(true); }} className="gap-2">
+              <Plus className="w-4 h-4" /> Nuevo Cheque
+            </Button>
+          </>
         )}
       </PageHeader>
 
