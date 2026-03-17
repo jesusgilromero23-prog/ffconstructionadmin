@@ -121,6 +121,20 @@ export default function Cheques() {
         </div>
       </div>
 
+      {selectedIds.size > 0 && (
+        <div className="mb-4 flex items-center justify-between bg-primary/5 border border-primary/20 rounded-xl px-4 py-2.5">
+          <span className="text-sm font-medium text-primary">{selectedIds.size} cheque{selectedIds.size > 1 ? "s" : ""} seleccionado{selectedIds.size > 1 ? "s" : ""}</span>
+          <div className="flex gap-2">
+            <Button size="sm" variant="outline" className="gap-1.5 text-xs" onClick={handlePdfSeleccionados}>
+              <Download className="w-3.5 h-3.5" /> Descargar PDF seleccionados
+            </Button>
+            <Button size="sm" variant="ghost" className="text-xs text-muted-foreground" onClick={() => setSelectedIds(new Set())}>
+              Limpiar selección
+            </Button>
+          </div>
+        </div>
+      )}
+
       {filtered.length === 0 ? <EmptyState message="No hay cheques registrados en este período" /> : (
         <div className="bg-card rounded-2xl border border-border overflow-hidden shadow-sm">
           <div className="overflow-x-auto">
