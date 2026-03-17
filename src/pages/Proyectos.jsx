@@ -229,6 +229,7 @@ export default function Proyectos() {
   const [editingContrato, setEditingContrato] = useState(null);
   const [defaultProyecto, setDefaultProyecto] = useState("");
   const qc = useQueryClient();
+  const { canEdit, user } = useEditPermission();
 
   const { data: proyectos = [] } = useQuery({ queryKey: ["proyectos"], queryFn: () => base44.entities.Proyecto.list("-created_date", 200) });
   const { data: contratos = [] } = useQuery({ queryKey: ["contratos"], queryFn: () => base44.entities.ContratoProyecto.list("-fecha_contrato", 500) });
@@ -249,10 +250,14 @@ export default function Proyectos() {
   return (
     <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto">
       <PageHeader title="Proyectos" subtitle="Gestión de proyectos: contratos, gastos y ganancias">
-        <Button onClick={() => { setEditingProy(null); setShowProyForm(true); }} className="gap-2">
-          <Plus className="w-4 h-4" /> Nuevo Proyecto
-        </Button>
+        {canEdit && (
+          <Button onClick={() => { setEditingProy(null); setShowProyForm(true); }} className="gap-2">
+            <Plus className="w-4 h-4" /> Nuevo Proyecto
+          </Button>
+        )}
       </PageHeader>
+
+      {!canEdit && user && <AccessGuard user={user} />}
 
       {proyectos.length === 0 ? (
         <EmptyState message="No hay proyectos registrados" />
@@ -268,6 +273,7 @@ export default function Proyectos() {
             onEditContrato={(c) => { setEditingContrato(c); setShowContratoForm(true); }}
             onDeleteContrato={(id) => contMut.delete.mutate(id)}
             onNewContrato={(nombre) => { setDefaultProyecto(nombre); setEditingContrato(null); setShowContratoForm(true); }}
+            canEdit={canEdit}
           />
         ))
       )}
