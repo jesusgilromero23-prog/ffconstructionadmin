@@ -3,7 +3,7 @@ import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Plus, Pencil, Trash2, Download, FileText, Sheet } from "lucide-react";
+import { Plus, Pencil, Trash2, Download, FileText, Sheet, CheckSquare } from "lucide-react";
 import { useEditPermission } from "@/hooks/useEditPermission";
 import AccessGuard from "@/components/shared/AccessGuard";
 import { generateReciboCheque, generateListadoCheques } from "@/lib/pdfGenerator";
