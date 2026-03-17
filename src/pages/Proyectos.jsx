@@ -277,6 +277,7 @@ export default function Proyectos() {
   const { data: proyectos = [] } = useQuery({ queryKey: ["proyectos"], queryFn: () => base44.entities.Proyecto.list("-created_date", 200) });
   const { data: contratos = [] } = useQuery({ queryKey: ["contratos"], queryFn: () => base44.entities.ContratoProyecto.list("-fecha_contrato", 500) });
   const { data: gastos = [] } = useQuery({ queryKey: ["gastosProyecto"], queryFn: () => base44.entities.GastoProyecto.list("-fecha", 500) });
+  const { data: depositos = [] } = useQuery({ queryKey: ["depositos"], queryFn: () => base44.entities.Deposito.list("-fecha", 500) });
 
   const proyMut = {
     create: useMutation({ mutationFn: d => base44.entities.Proyecto.create(d), onSuccess: () => { qc.invalidateQueries({ queryKey: ["proyectos"] }); setShowProyForm(false); } }),
