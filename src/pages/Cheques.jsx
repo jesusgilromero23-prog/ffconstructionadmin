@@ -28,6 +28,8 @@ export default function Cheques() {
   const [anio, setAnio] = useState(new Date().getFullYear());
   const qc = useQueryClient();
 
+  const { canEdit, user } = useEditPermission();
+
   const { data: cheques = [] } = useQuery({
     queryKey: ["cheques"], queryFn: () => base44.entities.Cheque.list("-numero_cheque", 500),
   });
@@ -66,10 +68,14 @@ export default function Cheques() {
         <Button variant="outline" className="gap-2" onClick={() => generateListadoCheques({ cheques: filtered, mes, anio })}>
           <Download className="w-4 h-4" /> PDF Listado
         </Button>
-        <Button onClick={() => { setEditing(null); setShowForm(true); }} className="gap-2">
-          <Plus className="w-4 h-4" /> Nuevo Cheque
-        </Button>
+        {canEdit && (
+          <Button onClick={() => { setEditing(null); setShowForm(true); }} className="gap-2">
+            <Plus className="w-4 h-4" /> Nuevo Cheque
+          </Button>
+        )}
       </PageHeader>
+
+      {!canEdit && user && <AccessGuard user={user} />}
 
       <div className="bg-card rounded-2xl border border-border p-5 mb-6 flex items-center justify-between">
         <div className="flex gap-8">
@@ -123,12 +129,14 @@ export default function Cheques() {
                           <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground" title="Descargar recibo PDF" onClick={() => generateReciboCheque(c)}>
                             <FileText className="w-3.5 h-3.5" />
                           </Button>
-                          <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => { setEditing(c); setShowForm(true); }}>
-                            <Pencil className="w-3.5 h-3.5" />
-                          </Button>
-                          <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive" onClick={() => deleteMut.mutate(c.id)}>
-                            <Trash2 className="w-3.5 h-3.5" />
-                          </Button>
+                          {canEdit && <>
+                            <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => { setEditing(c); setShowForm(true); }}>
+                              <Pencil className="w-3.5 h-3.5" />
+                            </Button>
+                            <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive" onClick={() => deleteMut.mutate(c.id)}>
+                              <Trash2 className="w-3.5 h-3.5" />
+                            </Button>
+                          </>}
                         </div>
                       </td>
                     </motion.tr>
