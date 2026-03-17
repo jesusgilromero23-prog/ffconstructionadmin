@@ -2,14 +2,18 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.20';
 
 Deno.serve(async (req) => {
   const base44 = createClientFromRequest(req);
-  const user = await base44.auth.me();
+
+  const [user, connection] = await Promise.all([
+    base44.auth.me(),
+    base44.asServiceRole.connectors.getConnection('googlesheets'),
+  ]);
+
   if (!user) return Response.json({ error: 'Unauthorized' }, { status: 401 });
 
   const { spreadsheetId, sheetName = 'Sheet1' } = await req.json();
   if (!spreadsheetId) return Response.json({ error: 'spreadsheetId requerido' }, { status: 400 });
 
-  const { accessToken } = await base44.asServiceRole.connectors.getConnection('googlesheets');
-
+  const { accessToken } = connection;
   const range = encodeURIComponent(`${sheetName}!A1:Z1000`);
   const url = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${range}`;
   const res = await fetch(url, { headers: { Authorization: `Bearer ${accessToken}` } });
@@ -42,9 +46,6 @@ Deno.serve(async (req) => {
     }
 
     const fechaObj = new Date(fecha);
-    const mes = fechaObj.getMonth() + 1;
-    const anio = fechaObj.getFullYear();
-
     return {
       numero_cheque: numero,
       beneficiario,
@@ -53,8 +54,8 @@ Deno.serve(async (req) => {
       concepto: obj['concepto'] || obj['descripcion'] || obj['concept'] || '',
       estado: obj['estado'] || obj['status'] || 'emitido',
       banco: obj['banco'] || obj['bank'] || '',
-      mes,
-      anio,
+      mes: fechaObj.getMonth() + 1,
+      anio: fechaObj.getFullYear(),
       notas: obj['notas'] || obj['notes'] || '',
     };
   }).filter(Boolean);
