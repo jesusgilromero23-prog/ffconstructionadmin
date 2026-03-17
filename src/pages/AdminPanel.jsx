@@ -193,15 +193,7 @@ export default function AdminPanel() {
       </div>
 
       {tab === "mensajes" && (
-        <div className="space-y-3">
-          {mensajes.length === 0 ? (
-            <div className="text-center py-12 text-muted-foreground text-sm">No hay mensajes aún.</div>
-          ) : (
-            mensajes.map(m => (
-              <MensajeCard key={m.id} m={m} onRespond={handleRespond} />
-            ))
-          )}
-        </div>
+        <ChatConversationPanel mensajes={mensajes} />
       )}
 
       {tab === "solicitudes" && (
