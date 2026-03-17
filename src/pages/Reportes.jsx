@@ -91,7 +91,7 @@ export default function Reportes() {
             {years.map(y => <SelectItem key={y} value={String(y)}>{y}</SelectItem>)}
           </SelectContent>
         </Select>
-        <Button variant="outline" className="gap-2" onClick={() => generateReporteAnual({ anio, annualData: monthlyChart, grandTotal: plSummary.totalGastos, depositos: fD, prestamos })}>
+        <Button variant="outline" className="gap-2" onClick={() => generateReporteAnual({ anio, depositos, gastos, gastosProyecto, gastosTarjeta, prestamos })}>
           <Download className="w-4 h-4" /> PDF Anual
         </Button>
       </PageHeader>
