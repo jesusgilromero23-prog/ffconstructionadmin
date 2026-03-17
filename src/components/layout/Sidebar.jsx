@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { 
   LayoutDashboard, Receipt, FileCheck, FolderKanban, CreditCard, 
-  BarChart3, Menu, X, ChevronRight, LogOut, ArrowDownCircle, Building2, Shield
+  BarChart3, Menu, X, ChevronRight, LogOut, ArrowDownCircle, Building2, Shield, Banknote
 } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import { motion, AnimatePresence } from "framer-motion";
@@ -16,6 +16,7 @@ const navItems = [
   { label: "Tarjetas de Crédito", path: "/Tarjetas", icon: CreditCard },
   { label: "Proyectos", path: "/Proyectos", icon: Building2 },
   { label: "Gastos x Proyecto", path: "/GastosProyecto", icon: FolderKanban },
+  { label: "Préstamos", path: "/PrestamosDeposito", icon: Banknote },
   { label: "Reportes", path: "/Reportes", icon: BarChart3 },
 ];
 
