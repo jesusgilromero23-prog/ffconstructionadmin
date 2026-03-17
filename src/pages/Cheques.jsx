@@ -61,6 +61,9 @@ export default function Cheques() {
     <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto">
       <PageHeader title="Control de Cheques" subtitle="Consecutivo numérico, montos y seguimiento de cheques">
         <MonthYearFilter mes={mes} anio={anio} onMesChange={setMes} onAnioChange={setAnio} />
+        <Button variant="outline" className="gap-2" onClick={() => generateListadoCheques({ cheques: filtered, mes, anio })}>
+          <Download className="w-4 h-4" /> PDF Listado
+        </Button>
         <Button onClick={() => { setEditing(null); setShowForm(true); }} className="gap-2">
           <Plus className="w-4 h-4" /> Nuevo Cheque
         </Button>
