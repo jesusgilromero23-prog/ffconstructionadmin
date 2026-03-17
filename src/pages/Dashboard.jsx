@@ -140,6 +140,13 @@ export default function Dashboard() {
         </Select>
       </PageHeader>
 
+      <NotificationsPanel
+        prestamos={prestamos}
+        cheques={cheques}
+        contratos={contratos}
+        gastosProyecto={gastosProyecto}
+      />
+
       {/* Utilidad Banner */}
       <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}
         className={`rounded-2xl p-5 mb-6 flex items-center justify-between border shadow-sm ${utilidad >= 0 ? 'bg-emerald-50 border-emerald-200' : 'bg-red-50 border-red-200'}`}>
