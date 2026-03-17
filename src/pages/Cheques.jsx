@@ -118,6 +118,9 @@ export default function Cheques() {
                       <td className="px-5 py-3.5 text-right font-semibold">${(c.monto || 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}</td>
                       <td className="px-5 py-3.5 text-right">
                         <div className="flex justify-end gap-1">
+                          <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground" title="Descargar recibo PDF" onClick={() => generateReciboCheque(c)}>
+                            <FileText className="w-3.5 h-3.5" />
+                          </Button>
                           <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => { setEditing(c); setShowForm(true); }}>
                             <Pencil className="w-3.5 h-3.5" />
                           </Button>
