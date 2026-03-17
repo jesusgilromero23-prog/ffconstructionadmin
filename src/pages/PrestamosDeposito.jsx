@@ -13,6 +13,7 @@ import PageHeader from "@/components/shared/PageHeader";
 import EmptyState from "@/components/shared/EmptyState";
 import { motion, AnimatePresence } from "framer-motion";
 import { Building2, Calendar, Percent, Clock, Plus, Trash2, ChevronDown, ChevronUp, CheckCircle2 } from "lucide-react";
+import DateRangeFilter from "@/components/shared/DateRangeFilter";
 
 const fmt = (v) => `$${(v || 0).toLocaleString("en-US", { minimumFractionDigits: 2 })}`;
 
