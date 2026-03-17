@@ -82,6 +82,9 @@ function ProjectCard({ proyecto, contratos, gastos, onEditProy, onDeleteProy, on
           </div>
         </div>
         <div className="flex items-center gap-2 flex-shrink-0">
+          <Button variant="outline" size="sm" className="gap-1.5 h-8 text-xs" onClick={() => generateProyectoPDF({ proyecto, contratos, gastos })}>
+            <Download className="w-3.5 h-3.5" /> PDF
+          </Button>
           <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => onEditProy(proyecto)}>
             <Pencil className="w-3.5 h-3.5" />
           </Button>
