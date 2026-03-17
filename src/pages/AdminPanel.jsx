@@ -102,6 +102,20 @@ export default function AdminPanel() {
   const qc = useQueryClient();
   const markedReadRef = useRef(new Set());
 
+  // Security: verify admin role client-side (server enforces via Base44 entity rules)
+  const { data: user } = useQuery({ queryKey: ["currentUser"], queryFn: () => base44.auth.me(), staleTime: 60000 });
+  if (user && user.role !== "admin") {
+    return (
+      <div className="flex items-center justify-center h-full min-h-[60vh]">
+        <div className="text-center">
+          <Shield className="w-12 h-12 text-red-400 mx-auto mb-3" />
+          <p className="text-sm font-semibold text-foreground">Acceso restringido</p>
+          <p className="text-xs text-muted-foreground mt-1">Solo administradores pueden ver este panel.</p>
+        </div>
+      </div>
+    );
+  }
+
   const { data: solicitudes = [] } = useQuery({
     queryKey: ["solicitudesAdmin"],
     queryFn: () => base44.entities.SolicitudAcceso.list("-created_date", 100),

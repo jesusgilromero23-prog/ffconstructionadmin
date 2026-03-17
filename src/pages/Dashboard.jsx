@@ -49,7 +49,7 @@ function KpiCard({ title, value, icon: Icon, color, sub, positive }) {
 export default function Dashboard() {
   const currentYear = new Date().getFullYear();
   const [anio, setAnio] = useState(currentYear);
-  const { data: user } = useQuery({ queryKey: ["currentUser"], queryFn: () => base44.auth.me() });
+  const { data: user } = useQuery({ queryKey: ["currentUser"], queryFn: () => base44.auth.me(), staleTime: 60000 });
   const years = Array.from({ length: 5 }, (_, i) => currentYear - 2 + i);
   const fmt = (v) => `$${(v || 0).toLocaleString("en-US", { minimumFractionDigits: 2 })}`;
 
