@@ -48,7 +48,7 @@ const tipoGastoColors = {
   labor_extra: "bg-orange-100 text-orange-700",
 };
 
-function ProjectCard({ proyecto, contratos, gastos, onEditProy, onDeleteProy, onEditContrato, onDeleteContrato, onNewContrato }) {
+function ProjectCard({ proyecto, contratos, gastos, onEditProy, onDeleteProy, onEditContrato, onDeleteContrato, onNewContrato, canEdit }) {
   const [expanded, setExpanded] = useState(true);
   const fmt = (v) => `$${(v || 0).toLocaleString("en-US", { minimumFractionDigits: 2 })}`;
 
@@ -87,12 +87,14 @@ function ProjectCard({ proyecto, contratos, gastos, onEditProy, onDeleteProy, on
           <Button variant="outline" size="sm" className="gap-1.5 h-8 text-xs" onClick={() => generateProyectoPDF({ proyecto, contratos, gastos })}>
             <Download className="w-3.5 h-3.5" /> PDF
           </Button>
-          <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => onEditProy(proyecto)}>
-            <Pencil className="w-3.5 h-3.5" />
-          </Button>
-          <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive" onClick={() => onDeleteProy(proyecto.id)}>
-            <Trash2 className="w-3.5 h-3.5" />
-          </Button>
+          {canEdit && <>
+            <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => onEditProy(proyecto)}>
+              <Pencil className="w-3.5 h-3.5" />
+            </Button>
+            <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive" onClick={() => onDeleteProy(proyecto.id)}>
+              <Trash2 className="w-3.5 h-3.5" />
+            </Button>
+          </>}
         </div>
       </div>
 
@@ -129,10 +131,12 @@ function ProjectCard({ proyecto, contratos, gastos, onEditProy, onDeleteProy, on
             {/* Contracts Section */}
             <div className="px-6 pt-4 pb-2">
               <div className="flex items-center justify-between mb-3">
-                <h3 className="text-sm font-semibold text-foreground">Contratos del Proyecto</h3>
+              <h3 className="text-sm font-semibold text-foreground">Contratos del Proyecto</h3>
+              {canEdit && (
                 <Button size="sm" variant="outline" className="gap-1.5 h-7 text-xs" onClick={() => onNewContrato(proyecto.nombre)}>
                   <Plus className="w-3.5 h-3.5" /> Agregar Contrato
                 </Button>
+              )}
               </div>
               {contratos.length === 0 ? (
                 <p className="text-xs text-muted-foreground py-2">Sin contratos registrados.</p>
@@ -160,14 +164,16 @@ function ProjectCard({ proyecto, contratos, gastos, onEditProy, onDeleteProy, on
                           <td className="px-4 py-2.5"><Badge variant="outline">{c.estado}</Badge></td>
                           <td className="px-4 py-2.5 text-right font-bold text-emerald-600">{fmt(c.monto_contrato)}</td>
                           <td className="px-4 py-2.5 text-right">
-                            <div className="flex justify-end gap-1">
-                              <Button variant="ghost" size="icon" className="h-6 w-6" onClick={() => onEditContrato(c)}>
-                                <Pencil className="w-3 h-3" />
-                              </Button>
-                              <Button variant="ghost" size="icon" className="h-6 w-6 text-destructive" onClick={() => onDeleteContrato(c.id)}>
-                                <Trash2 className="w-3 h-3" />
-                              </Button>
-                            </div>
+                           {canEdit && (
+                             <div className="flex justify-end gap-1">
+                               <Button variant="ghost" size="icon" className="h-6 w-6" onClick={() => onEditContrato(c)}>
+                                 <Pencil className="w-3 h-3" />
+                               </Button>
+                               <Button variant="ghost" size="icon" className="h-6 w-6 text-destructive" onClick={() => onDeleteContrato(c.id)}>
+                                 <Trash2 className="w-3 h-3" />
+                               </Button>
+                             </div>
+                           )}
                           </td>
                         </tr>
                       ))}
