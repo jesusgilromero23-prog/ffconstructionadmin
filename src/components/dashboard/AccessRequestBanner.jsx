@@ -28,7 +28,7 @@ export default function AccessRequestBanner({ user }) {
   });
 
   const handleSubmit = () => {
-    if (!motivo.trim()) return;
+    if (!motivo.trim() || motivo.trim().length < 10) return;
     createMut.mutate({
       usuario_email: user?.email,
       usuario_nombre: user?.full_name || user?.email,
@@ -70,6 +70,7 @@ export default function AccessRequestBanner({ user }) {
                 value={motivo}
                 onChange={e => setMotivo(e.target.value)}
                 placeholder="Describe por qué necesitas acceso de edición..."
+                maxLength={300}
                 className="flex-1 text-xs bg-white border border-amber-300 rounded-xl px-3 py-2 outline-none focus:ring-2 focus:ring-amber-300"
               />
               <Button size="sm" className="bg-amber-600 hover:bg-amber-700 text-white gap-1.5 text-xs"

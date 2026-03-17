@@ -80,8 +80,17 @@ Pregunta del usuario: "${userMsg}"`,
     }
   };
 
-  const renderText = (t) =>
-    t.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>").replace(/\n/g, "<br/>");
+  // Safe renderer: escape HTML first, then apply markdown-like formatting
+  const renderText = (t) => {
+    const safe = t
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+    return safe
+      .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
+      .replace(/\n/g, "<br/>");
+  };
 
   return (
     <>

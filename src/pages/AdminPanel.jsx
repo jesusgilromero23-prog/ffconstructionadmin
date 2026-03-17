@@ -100,6 +100,7 @@ function MensajeCard({ m, onRespond }) {
 export default function AdminPanel() {
   const [tab, setTab] = useState("mensajes");
   const qc = useQueryClient();
+  const markedReadRef = React.useRef(new Set());
 
   const { data: solicitudes = [] } = useQuery({
     queryKey: ["solicitudesAdmin"],
@@ -132,14 +133,16 @@ export default function AdminPanel() {
     updateMensaje.mutate({ id, data: { respuesta_admin: respuesta, respondido: true, leido_admin: true } });
   };
 
-  // Mark messages as read when viewing
+  // Mark messages as read when viewing (only once per message ID)
   useEffect(() => {
-    if (tab === "mensajes") {
-      mensajes.filter(m => !m.leido_admin).forEach(m => {
+    if (tab !== "mensajes") return;
+    mensajes
+      .filter(m => !m.leido_admin && !markedReadRef.current.has(m.id))
+      .forEach(m => {
+        markedReadRef.current.add(m.id);
         updateMensaje.mutate({ id: m.id, data: { leido_admin: true } });
       });
-    }
-  }, [tab, mensajes.length]);
+  }, [tab, mensajes]);
 
   return (
     <div className="p-4 sm:p-6 lg:p-8 max-w-4xl mx-auto">
