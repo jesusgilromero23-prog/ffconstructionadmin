@@ -56,6 +56,24 @@ export default function Cheques() {
     return true;
   });
 
+  const toggleSelect = (id) => setSelectedIds(prev => {
+    const next = new Set(prev);
+    next.has(id) ? next.delete(id) : next.add(id);
+    return next;
+  });
+
+  const toggleAll = () => {
+    if (selectedIds.size === filtered.length) setSelectedIds(new Set());
+    else setSelectedIds(new Set(filtered.map(c => c.id)));
+  };
+
+  const selectedCheques = filtered.filter(c => selectedIds.has(c.id));
+
+  const handlePdfSeleccionados = () => {
+    const lista = selectedCheques.length > 0 ? selectedCheques : filtered;
+    generateListadoCheques({ cheques: lista, mes, anio });
+  };
+
   const total = filtered.reduce((s, c) => s + (c.monto || 0), 0);
   const nextNumber = cheques.length > 0 ? Math.max(...cheques.map(c => c.numero_cheque || 0)) + 1 : 1;
 
