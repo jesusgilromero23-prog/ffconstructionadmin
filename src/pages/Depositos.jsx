@@ -28,12 +28,20 @@ const tipoColors = {
 function DepositoForm({ open, onClose, onSave, deposito }) {
   const [form, setForm] = useState(deposito || {
     descripcion: "", monto: "", tipo: "pago_cliente",
-    fecha: new Date().toISOString().slice(0, 10), fuente: "", banco: "", notas: ""
+    fecha: new Date().toISOString().slice(0, 10), fuente: "", banco: "", notas: "",
+    prestamo_entidad: "", prestamo_tasa: "", prestamo_plazo: ""
   });
   const handleSubmit = (e) => {
     e.preventDefault();
     const fecha = new Date(form.fecha);
-    onSave({ ...form, monto: Number(form.monto), mes: fecha.getMonth() + 1, anio: fecha.getFullYear() });
+    const data = { ...form, monto: Number(form.monto), mes: fecha.getMonth() + 1, anio: fecha.getFullYear() };
+    if (form.tipo !== "prestamo") {
+      delete data.prestamo_entidad; delete data.prestamo_tasa; delete data.prestamo_plazo;
+    } else {
+      data.prestamo_tasa = Number(form.prestamo_tasa) || 0;
+      data.prestamo_plazo = Number(form.prestamo_plazo) || 0;
+    }
+    onSave(data);
   };
   return (
     <Dialog open={open} onOpenChange={onClose}>
@@ -52,6 +60,7 @@ function DepositoForm({ open, onClose, onSave, deposito }) {
                 <SelectContent>
                   <SelectItem value="pago_cliente">Pago Cliente</SelectItem>
                   <SelectItem value="deposito_bancario">Depósito Bancario</SelectItem>
+                  <SelectItem value="prestamo">💰 Préstamo Recibido</SelectItem>
                   <SelectItem value="inversion">Inversión</SelectItem>
                   <SelectItem value="otro">Otro</SelectItem>
                 </SelectContent>
@@ -76,6 +85,28 @@ function DepositoForm({ open, onClose, onSave, deposito }) {
             <Label>Banco</Label>
             <Input value={form.banco} onChange={e => setForm({...form, banco: e.target.value})} />
           </div>
+
+          {/* Campos adicionales solo si es préstamo */}
+          {form.tipo === "prestamo" && (
+            <div className="bg-amber-50 border border-amber-200 rounded-xl p-3 space-y-3">
+              <p className="text-xs font-semibold text-amber-700">Detalles del Préstamo</p>
+              <div className="space-y-2">
+                <Label>Entidad Prestamista</Label>
+                <Input placeholder="Banco, persona, institución..." value={form.prestamo_entidad} onChange={e => setForm({...form, prestamo_entidad: e.target.value})} />
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-2">
+                  <Label>Tasa de Interés %</Label>
+                  <Input type="number" step="0.01" placeholder="0.00" value={form.prestamo_tasa} onChange={e => setForm({...form, prestamo_tasa: e.target.value})} />
+                </div>
+                <div className="space-y-2">
+                  <Label>Plazo (meses)</Label>
+                  <Input type="number" placeholder="0" value={form.prestamo_plazo} onChange={e => setForm({...form, prestamo_plazo: e.target.value})} />
+                </div>
+              </div>
+            </div>
+          )}
+
           <div className="space-y-2">
             <Label>Notas</Label>
             <Textarea value={form.notas} onChange={e => setForm({...form, notas: e.target.value})} className="h-16" />
