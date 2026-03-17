@@ -11,6 +11,7 @@ import {
 } from "recharts";
 import PageHeader from "@/components/shared/PageHeader";
 import NotificationsPanel from "@/components/dashboard/NotificationsPanel";
+import AccessRequestBanner from "@/components/dashboard/AccessRequestBanner";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { motion } from "framer-motion";
 
@@ -48,6 +49,7 @@ function KpiCard({ title, value, icon: Icon, color, sub, positive }) {
 export default function Dashboard() {
   const currentYear = new Date().getFullYear();
   const [anio, setAnio] = useState(currentYear);
+  const { data: user } = useQuery({ queryKey: ["currentUser"], queryFn: () => base44.auth.me() });
   const years = Array.from({ length: 5 }, (_, i) => currentYear - 2 + i);
   const fmt = (v) => `$${(v || 0).toLocaleString("en-US", { minimumFractionDigits: 2 })}`;
 
@@ -140,6 +142,7 @@ export default function Dashboard() {
         </Select>
       </PageHeader>
 
+      {user?.role !== "admin" && <AccessRequestBanner user={user} />}
       <NotificationsPanel
         prestamos={prestamos}
         cheques={cheques}
