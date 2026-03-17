@@ -2,10 +2,11 @@ import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { 
   LayoutDashboard, Receipt, FileCheck, FolderKanban, CreditCard, 
-  BarChart3, Menu, X, ChevronRight, LogOut, ArrowDownCircle, Building2
+  BarChart3, Menu, X, ChevronRight, LogOut, ArrowDownCircle, Building2, Shield
 } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import { motion, AnimatePresence } from "framer-motion";
+import { useQuery } from "@tanstack/react-query";
 
 const navItems = [
   { label: "Dashboard", path: "/Dashboard", icon: LayoutDashboard },
@@ -22,6 +23,7 @@ export default function Sidebar() {
   const location = useLocation();
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const { data: user } = useQuery({ queryKey: ["currentUser"], queryFn: () => base44.auth.me() });
 
   const NavContent = () => (
     <div className="flex flex-col h-full">
@@ -62,6 +64,20 @@ export default function Sidebar() {
       </nav>
 
       <div className="px-3 pb-4 mt-auto pt-2 border-t border-sidebar-border">
+        {user?.role === "admin" && (
+          <Link
+            to="/AdminPanel"
+            onClick={() => setMobileOpen(false)}
+            className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 mb-1 ${
+              location.pathname === "/AdminPanel"
+                ? "bg-sidebar-primary text-sidebar-primary-foreground shadow-lg shadow-primary/25"
+                : "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground"
+            }`}
+          >
+            <Shield className="w-[18px] h-[18px] flex-shrink-0" />
+            {!collapsed && <span>Panel Admin</span>}
+          </Link>
+        )}
         <button 
           onClick={() => base44.auth.logout()}
           className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-sidebar-foreground/50 hover:text-sidebar-foreground hover:bg-sidebar-accent w-full transition-colors mt-2"
