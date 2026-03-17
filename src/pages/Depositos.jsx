@@ -25,11 +25,11 @@ const tipoColors = {
   otro: "bg-gray-100 text-gray-700",
 };
 
-function DepositoForm({ open, onClose, onSave, deposito }) {
+function DepositoForm({ open, onClose, onSave, deposito, proyectos }) {
   const [form, setForm] = useState(deposito || {
     descripcion: "", monto: "", tipo: "pago_cliente",
     fecha: new Date().toISOString().slice(0, 10), fuente: "", banco: "", notas: "",
-    prestamo_entidad: "", prestamo_tasa: "", prestamo_plazo: ""
+    proyecto_nombre: "", prestamo_entidad: "", prestamo_tasa: "", prestamo_plazo: ""
   });
   const handleSubmit = (e) => {
     e.preventDefault();
