@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { motion } from "framer-motion";
 import PageHeader from "@/components/shared/PageHeader";
 import { format } from "date-fns";
+import ChatConversationPanel from "@/components/admin/ChatConversationPanel";
 
 function SolicitudCard({ s, onApprove, onReject }) {
   const estadoColors = {
