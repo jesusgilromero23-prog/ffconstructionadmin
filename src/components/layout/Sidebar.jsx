@@ -2,17 +2,19 @@ import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { 
   LayoutDashboard, Receipt, FileCheck, FolderKanban, CreditCard, 
-  BarChart3, Menu, X, ChevronRight, LogOut
+  BarChart3, Menu, X, ChevronRight, LogOut, ArrowDownCircle, Building2
 } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import { motion, AnimatePresence } from "framer-motion";
 
 const navItems = [
   { label: "Dashboard", path: "/Dashboard", icon: LayoutDashboard },
+  { label: "Depósitos", path: "/Depositos", icon: ArrowDownCircle },
   { label: "Gastos Generales", path: "/Gastos", icon: Receipt },
   { label: "Control de Cheques", path: "/Cheques", icon: FileCheck },
-  { label: "Gastos por Proyecto", path: "/Proyectos", icon: FolderKanban },
   { label: "Tarjetas de Crédito", path: "/Tarjetas", icon: CreditCard },
+  { label: "Proyectos", path: "/Proyectos", icon: Building2 },
+  { label: "Gastos x Proyecto", path: "/GastosProyecto", icon: FolderKanban },
   { label: "Reportes", path: "/Reportes", icon: BarChart3 },
 ];
 
@@ -23,7 +25,6 @@ export default function Sidebar() {
 
   const NavContent = () => (
     <div className="flex flex-col h-full">
-      {/* Logo */}
       <div className="px-5 py-6 flex items-center gap-3">
         <div className="w-9 h-9 rounded-xl bg-primary flex items-center justify-center flex-shrink-0">
           <BarChart3 className="w-5 h-5 text-primary-foreground" />
@@ -36,8 +37,7 @@ export default function Sidebar() {
         )}
       </div>
 
-      {/* Navigation */}
-      <nav className="flex-1 px-3 space-y-1 mt-2">
+      <nav className="flex-1 px-3 space-y-0.5 mt-1 overflow-y-auto">
         {navItems.map((item) => {
           const isActive = location.pathname === item.path;
           return (
@@ -61,11 +61,10 @@ export default function Sidebar() {
         })}
       </nav>
 
-      {/* Bottom */}
-      <div className="px-3 pb-4 mt-auto">
+      <div className="px-3 pb-4 mt-auto pt-2 border-t border-sidebar-border">
         <button 
           onClick={() => base44.auth.logout()}
-          className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-sidebar-foreground/50 hover:text-sidebar-foreground hover:bg-sidebar-accent w-full transition-colors"
+          className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-sidebar-foreground/50 hover:text-sidebar-foreground hover:bg-sidebar-accent w-full transition-colors mt-2"
         >
           <LogOut className="w-[18px] h-[18px]" />
           {!collapsed && <span>Cerrar Sesión</span>}
@@ -76,7 +75,6 @@ export default function Sidebar() {
 
   return (
     <>
-      {/* Mobile toggle */}
       <button 
         className="lg:hidden fixed top-4 left-4 z-50 p-2 rounded-xl bg-card shadow-lg border border-border"
         onClick={() => setMobileOpen(!mobileOpen)}
@@ -84,7 +82,6 @@ export default function Sidebar() {
         {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
       </button>
 
-      {/* Mobile overlay */}
       <AnimatePresence>
         {mobileOpen && (
           <motion.div 
@@ -95,7 +92,6 @@ export default function Sidebar() {
         )}
       </AnimatePresence>
 
-      {/* Mobile sidebar */}
       <AnimatePresence>
         {mobileOpen && (
           <motion.aside
@@ -108,12 +104,11 @@ export default function Sidebar() {
         )}
       </AnimatePresence>
 
-      {/* Desktop sidebar */}
-      <aside className={`hidden lg:flex flex-col bg-sidebar border-r border-sidebar-border transition-all duration-300 ${collapsed ? 'w-[72px]' : 'w-[260px]'}`}>
+      <aside className={`hidden lg:flex flex-col bg-sidebar border-r border-sidebar-border transition-all duration-300 relative ${collapsed ? 'w-[72px]' : 'w-[260px]'}`}>
         <NavContent />
         <button 
           onClick={() => setCollapsed(!collapsed)}
-          className="absolute -right-3 top-8 w-6 h-6 rounded-full bg-card border border-border shadow-sm flex items-center justify-center hover:bg-muted transition-colors"
+          className="absolute -right-3 top-8 w-6 h-6 rounded-full bg-card border border-border shadow-sm flex items-center justify-center hover:bg-muted transition-colors z-10"
         >
           <ChevronRight className={`w-3 h-3 transition-transform ${collapsed ? '' : 'rotate-180'}`} />
         </button>
