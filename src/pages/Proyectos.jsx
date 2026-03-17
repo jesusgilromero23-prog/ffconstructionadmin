@@ -101,7 +101,7 @@ function ProjectCard({ proyecto, contratos, gastos, depositos, onEditProy, onDel
       </div>
 
       {/* P&L Summary Bar */}
-      <div className="grid grid-cols-2 sm:grid-cols-5 gap-0 border-b border-border text-xs">
+      <div className="grid grid-cols-2 sm:grid-cols-6 gap-0 border-b border-border text-xs">
         <div className="px-5 py-3 border-r border-border">
           <p className="text-muted-foreground mb-0.5">Contratos (+)</p>
           <p className="font-bold text-emerald-600">{fmt(totalContrato)}</p>
@@ -117,6 +117,13 @@ function ProjectCard({ proyecto, contratos, gastos, depositos, onEditProy, onDel
         <div className="px-5 py-3 border-r border-border">
           <p className="text-muted-foreground mb-0.5">Operativos (−)</p>
           <p className="font-semibold text-foreground">{fmt(totalOperativo)}</p>
+        </div>
+        <div className="px-5 py-3 border-r border-border bg-blue-50">
+          <p className="text-blue-600 mb-0.5">Cobrado</p>
+          <p className="font-bold text-blue-700">{fmt(totalDepositosRecibidos)}</p>
+          <p className={`text-[10px] font-semibold ${saldoPorCobrar > 0 ? 'text-amber-600' : 'text-emerald-600'}`}>
+            Saldo: {fmt(Math.max(saldoPorCobrar, 0))}
+          </p>
         </div>
         <div className={`px-5 py-3 ${ganancia >= 0 ? 'bg-emerald-50' : 'bg-red-50'}`}>
           <p className="text-muted-foreground mb-0.5 flex items-center gap-1">
