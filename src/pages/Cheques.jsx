@@ -145,7 +145,11 @@ export default function Cheques() {
                 <AnimatePresence>
                   {filtered.map((c) => (
                     <motion.tr key={c.id} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-                      className="border-b border-border last:border-0 hover:bg-muted/30 transition-colors">
+                      className={`border-b border-border last:border-0 hover:bg-muted/30 transition-colors ${selectedIds.has(c.id) ? "bg-primary/5" : ""}`}>
+                      <td className="px-4 py-3.5">
+                        <input type="checkbox" checked={selectedIds.has(c.id)} onChange={() => toggleSelect(c.id)}
+                          className="w-4 h-4 rounded cursor-pointer accent-primary" />
+                      </td>
                       <td className="px-5 py-3.5 font-semibold">#{c.numero_cheque}</td>
                       <td className="px-5 py-3.5 text-muted-foreground">{format(new Date(c.fecha_emision), "dd/MM/yyyy")}</td>
                       <td className="px-5 py-3.5 font-medium">{c.beneficiario}</td>
