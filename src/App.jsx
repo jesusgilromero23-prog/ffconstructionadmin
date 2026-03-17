@@ -15,6 +15,7 @@ import Tarjetas from './pages/Tarjetas';
 import Proyectos from './pages/Proyectos';
 import GastosProyecto from './pages/GastosProyecto';
 import Reportes from './pages/Reportes';
+import AdminPanel from './pages/AdminPanel';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -48,6 +49,7 @@ const AuthenticatedApp = () => {
         <Route path="/Proyectos" element={<Proyectos />} />
         <Route path="/GastosProyecto" element={<GastosProyecto />} />
         <Route path="/Reportes" element={<Reportes />} />
+        <Route path="/AdminPanel" element={<AdminPanel />} />
       </Route>
       <Route path="*" element={<PageNotFound />} />
     </Routes>
