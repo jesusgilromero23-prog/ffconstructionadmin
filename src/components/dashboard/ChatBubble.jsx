@@ -65,12 +65,30 @@ export default function ChatBubble({ user }) {
     // AI instant response
     setAiTyping(true);
     try {
+      // Build conversation history for context
+      const historial = localMessages
+        .filter(m => m.role === "user" || m.role === "ai")
+        .slice(-6)
+        .map(m => `${m.role === "user" ? "Usuario" : "Asistente"}: ${m.text}`)
+        .join("\n");
+
       const res = await base44.integrations.Core.InvokeLLM({
-        prompt: `Eres "Administrador Jesus", el asistente virtual del panel contable ContaControl. 
-Responde de manera amable y profesional en español. 
-Si la pregunta es sobre datos específicos del sistema que no conoces, di que Jesús Gil responderá pronto.
-Si es una pregunta general de contabilidad, ayuda con tu conocimiento.
-Pregunta del usuario: "${userMsg}"`,
+        prompt: `Eres el asistente virtual de ContaControl, un sistema de gestión contable y financiera para empresas de construcción. Responde siempre en español de forma amable, natural y concisa.
+
+Contexto del sistema:
+- ContaControl maneja cheques, depósitos, gastos, proyectos, tarjetas, préstamos y reportes financieros.
+- El administrador humano es Jesús Gil, quien puede dar respuestas más específicas sobre datos del sistema.
+
+Reglas importantes:
+1. Si la pregunta es sobre datos específicos (montos, saldos, transacciones concretas del usuario), responde: "Esa información la maneja directamente Jesús Gil. Ya veo tu mensaje y te responderá pronto. 📩"
+2. Si es una pregunta general de contabilidad, finanzas, construcción o uso del sistema, respóndela con tu conocimiento.
+3. Mantén un tono conversacional y natural, como un asistente real.
+4. Respuestas cortas y directas (máximo 3-4 líneas).
+
+Historial reciente:
+${historial}
+
+Nueva pregunta del usuario: "${userMsg}"`,
       });
       setLocalMessages(prev => [...prev, { role: "ai", text: res, time: new Date() }]);
     } catch {
