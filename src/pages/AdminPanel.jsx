@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { CheckCircle2, XCircle, MessageSquare, Users, Clock, Send, Shield } from "lucide-react";
@@ -133,7 +133,7 @@ export default function AdminPanel() {
   };
 
   // Mark messages as read when viewing
-  React.useEffect(() => {
+  useEffect(() => {
     if (tab === "mensajes") {
       mensajes.filter(m => !m.leido_admin).forEach(m => {
         updateMensaje.mutate({ id: m.id, data: { leido_admin: true } });
