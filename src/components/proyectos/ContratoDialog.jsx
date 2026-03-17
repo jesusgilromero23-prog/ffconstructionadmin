@@ -46,7 +46,7 @@ export default function ContratoDialog({ open, onClose, onSave, contrato, defaul
             <Select value={form.proyecto_nombre} onValueChange={v => setForm({...form, proyecto_nombre: v})}>
               <SelectTrigger><SelectValue placeholder="Seleccionar proyecto" /></SelectTrigger>
               <SelectContent>
-                {proyectos.map(p => <SelectItem key={p.id} value={p.nombre}>{p.nombre}</SelectItem>)}
+                {(proyectos || []).map(p => <SelectItem key={p.id} value={p.nombre}>{p.nombre}</SelectItem>)}
               </SelectContent>
             </Select>
           </div>
