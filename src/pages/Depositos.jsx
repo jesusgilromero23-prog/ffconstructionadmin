@@ -200,6 +200,7 @@ export default function Depositos() {
                       <td className="px-5 py-3.5"><Badge className={tipoColors[d.tipo]}>{d.tipo?.replace("_", " ")}</Badge></td>
                       <td className="px-5 py-3.5 text-muted-foreground">{d.fuente || "—"}</td>
                       <td className="px-5 py-3.5 text-muted-foreground">{d.banco || "—"}</td>
+                      <td className="px-5 py-3.5">{d.proyecto_nombre ? <Badge className="bg-indigo-100 text-indigo-700 text-xs">{d.proyecto_nombre}</Badge> : <span className="text-muted-foreground">—</span>}</td>
                       <td className="px-5 py-3.5 text-right font-bold text-emerald-600">{fmt(d.monto)}</td>
                       <td className="px-5 py-3.5 text-right">
                       {canEdit && (
@@ -231,6 +232,7 @@ export default function Depositos() {
             else createMut.mutate(data);
           }}
           deposito={editing}
+          proyectos={proyectos}
         />
       )}
     </div>
