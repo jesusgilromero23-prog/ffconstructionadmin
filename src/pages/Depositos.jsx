@@ -81,9 +81,21 @@ function DepositoForm({ open, onClose, onSave, deposito, proyectos }) {
               <Input value={form.fuente} onChange={e => setForm({...form, fuente: e.target.value})} />
             </div>
           </div>
-          <div className="space-y-2">
-            <Label>Banco</Label>
-            <Input value={form.banco} onChange={e => setForm({...form, banco: e.target.value})} />
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label>Banco</Label>
+              <Input value={form.banco} onChange={e => setForm({...form, banco: e.target.value})} />
+            </div>
+            <div className="space-y-2">
+              <Label>Proyecto (opcional)</Label>
+              <Select value={form.proyecto_nombre || ""} onValueChange={v => setForm({...form, proyecto_nombre: v === "__none__" ? "" : v})}>
+                <SelectTrigger><SelectValue placeholder="Sin proyecto" /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="__none__">— Sin proyecto —</SelectItem>
+                  {(proyectos || []).map(p => <SelectItem key={p.id} value={p.nombre}>{p.nombre}</SelectItem>)}
+                </SelectContent>
+              </Select>
+            </div>
           </div>
 
           {/* Campos adicionales solo si es préstamo */}
@@ -131,6 +143,7 @@ export default function Depositos() {
   const { canEdit, user } = useEditPermission();
 
   const { data: depositos = [] } = useQuery({ queryKey: ["depositos"], queryFn: () => base44.entities.Deposito.list("-fecha", 500) });
+  const { data: proyectos = [] } = useQuery({ queryKey: ["proyectos"], queryFn: () => base44.entities.Proyecto.list("-created_date", 200) });
 
   const createMut = useMutation({ mutationFn: d => base44.entities.Deposito.create(d), onSuccess: () => { qc.invalidateQueries({ queryKey: ["depositos"] }); setShowForm(false); } });
   const updateMut = useMutation({ mutationFn: ({ id, data }) => base44.entities.Deposito.update(id, data), onSuccess: () => { qc.invalidateQueries({ queryKey: ["depositos"] }); setShowForm(false); setEditing(null); } });
