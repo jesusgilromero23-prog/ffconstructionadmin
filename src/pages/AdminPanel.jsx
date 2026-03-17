@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { CheckCircle2, XCircle, MessageSquare, Users, Clock, Send, Shield } from "lucide-react";
@@ -100,7 +100,7 @@ function MensajeCard({ m, onRespond }) {
 export default function AdminPanel() {
   const [tab, setTab] = useState("mensajes");
   const qc = useQueryClient();
-  const markedReadRef = React.useRef(new Set());
+  const markedReadRef = useRef(new Set());
 
   const { data: solicitudes = [] } = useQuery({
     queryKey: ["solicitudesAdmin"],
