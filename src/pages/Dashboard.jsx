@@ -10,6 +10,7 @@ import {
   PieChart, Pie, Cell, AreaChart, Area, Legend 
 } from "recharts";
 import PageHeader from "@/components/shared/PageHeader";
+import NotificationsPanel from "@/components/dashboard/NotificationsPanel";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { motion } from "framer-motion";
 
