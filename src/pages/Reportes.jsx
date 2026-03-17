@@ -4,8 +4,11 @@ import { useQuery } from "@tanstack/react-query";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend, LineChart, Line } from "recharts";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Button } from "@/components/ui/button";
 import PageHeader from "@/components/shared/PageHeader";
 import { motion } from "framer-motion";
+import { Download } from "lucide-react";
+import { generateReporteAnual } from "@/lib/pdfGenerator";
 
 const MESES = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"];
 const COLORS = ["hsl(226,70%,55%)", "hsl(262,60%,55%)", "hsl(168,60%,45%)", "hsl(38,92%,50%)", "hsl(0,84%,60%)", "hsl(200,70%,50%)", "hsl(300,50%,50%)"];
