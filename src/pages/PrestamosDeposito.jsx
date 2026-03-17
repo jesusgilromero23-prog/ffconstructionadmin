@@ -225,7 +225,12 @@ export default function PrestamosDeposito() {
   });
 
   const todos = depositos.filter(d => d.tipo === "prestamo");
-  const filtrados = anio === 0 ? todos : todos.filter(p => p.anio === anio);
+  const filtrados = todos.filter(p => {
+    if (!p.fecha) return true;
+    if (desde && p.fecha < desde) return false;
+    if (hasta && p.fecha > hasta) return false;
+    return true;
+  });
 
   const totalPrestado = filtrados.reduce((s, p) => s + (p.monto || 0), 0);
   const totalPagado = pagosPrestamo
