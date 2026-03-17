@@ -63,7 +63,7 @@ export default function Gastos() {
   return (
     <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto">
       <PageHeader title="Gastos Generales" subtitle="Control de gastos de gasolina, oficina, materiales y más">
-        <MonthYearFilter mes={mes} anio={anio} onMesChange={setMes} onAnioChange={setAnio} />
+        <DateRangeFilter desde={desde} hasta={hasta} onDesdeChange={setDesde} onHastaChange={setHasta} />
         <Button onClick={() => { setEditing(null); setShowForm(true); }} className="gap-2">
           <Plus className="w-4 h-4" /> Nuevo Gasto
         </Button>

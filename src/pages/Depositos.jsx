@@ -164,7 +164,7 @@ export default function Depositos() {
   return (
     <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto">
       <PageHeader title="Depósitos / Ingresos" subtitle="Registro de dinero entrante a la empresa">
-        <MonthYearFilter mes={mes} anio={anio} onMesChange={setMes} onAnioChange={setAnio} />
+        <DateRangeFilter desde={desde} hasta={hasta} onDesdeChange={setDesde} onHastaChange={setHasta} />
         {canEdit && (
           <Button onClick={() => { setEditing(null); setShowForm(true); }} className="gap-2">
             <Plus className="w-4 h-4" /> Nuevo Depósito

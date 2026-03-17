@@ -54,7 +54,7 @@ export default function GastosProyecto() {
   return (
     <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto">
       <PageHeader title="Gastos por Proyecto" subtitle="Labor, material, operativo y labor extra por proyecto">
-        <MonthYearFilter mes={mes} anio={anio} onMesChange={setMes} onAnioChange={setAnio} />
+        <DateRangeFilter desde={desde} hasta={hasta} onDesdeChange={setDesde} onHastaChange={setHasta} />
         <Button onClick={() => { setEditing(null); setShowForm(true); }} className="gap-2">
           <Plus className="w-4 h-4" /> Nuevo Gasto
         </Button>

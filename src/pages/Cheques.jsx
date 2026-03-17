@@ -89,7 +89,7 @@ export default function Cheques() {
   return (
     <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto">
       <PageHeader title="Control de Cheques" subtitle="Consecutivo numérico, montos y seguimiento de cheques">
-        <MonthYearFilter mes={mes} anio={anio} onMesChange={setMes} onAnioChange={setAnio} />
+        <DateRangeFilter desde={desde} hasta={hasta} onDesdeChange={setDesde} onHastaChange={setHasta} />
         <Button variant="outline" className="gap-2" onClick={handlePdfSeleccionados}>
           <Download className="w-4 h-4" />
           {selectedIds.size > 0 ? `PDF (${selectedIds.size} sel.)` : "PDF Listado"}
