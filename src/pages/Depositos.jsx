@@ -96,6 +96,7 @@ export default function Depositos() {
   const [anio, setAnio] = useState(new Date().getFullYear());
   const qc = useQueryClient();
   const fmt = (v) => `$${(v||0).toLocaleString("en-US", { minimumFractionDigits: 2 })}`;
+  const { canEdit, user } = useEditPermission();
 
   const { data: depositos = [] } = useQuery({ queryKey: ["depositos"], queryFn: () => base44.entities.Deposito.list("-fecha", 500) });
 
@@ -115,10 +116,14 @@ export default function Depositos() {
     <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto">
       <PageHeader title="Depósitos / Ingresos" subtitle="Registro de dinero entrante a la empresa">
         <MonthYearFilter mes={mes} anio={anio} onMesChange={setMes} onAnioChange={setAnio} />
-        <Button onClick={() => { setEditing(null); setShowForm(true); }} className="gap-2">
-          <Plus className="w-4 h-4" /> Nuevo Depósito
-        </Button>
+        {canEdit && (
+          <Button onClick={() => { setEditing(null); setShowForm(true); }} className="gap-2">
+            <Plus className="w-4 h-4" /> Nuevo Depósito
+          </Button>
+        )}
       </PageHeader>
+
+      {!canEdit && user && <AccessGuard user={user} />}
 
       <div className="bg-emerald-50 border border-emerald-200 rounded-2xl p-5 mb-6 flex items-center justify-between">
         <span className="text-sm font-medium text-emerald-700">Total ingresos del período</span>
@@ -152,14 +157,16 @@ export default function Depositos() {
                       <td className="px-5 py-3.5 text-muted-foreground">{d.banco || "—"}</td>
                       <td className="px-5 py-3.5 text-right font-bold text-emerald-600">{fmt(d.monto)}</td>
                       <td className="px-5 py-3.5 text-right">
-                        <div className="flex justify-end gap-1">
-                          <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => { setEditing(d); setShowForm(true); }}>
-                            <Pencil className="w-3.5 h-3.5" />
-                          </Button>
-                          <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive" onClick={() => deleteMut.mutate(d.id)}>
-                            <Trash2 className="w-3.5 h-3.5" />
-                          </Button>
-                        </div>
+                      {canEdit && (
+                       <div className="flex justify-end gap-1">
+                         <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => { setEditing(d); setShowForm(true); }}>
+                           <Pencil className="w-3.5 h-3.5" />
+                         </Button>
+                         <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive" onClick={() => deleteMut.mutate(d.id)}>
+                           <Trash2 className="w-3.5 h-3.5" />
+                         </Button>
+                       </div>
+                      )}
                       </td>
                     </motion.tr>
                   ))}
