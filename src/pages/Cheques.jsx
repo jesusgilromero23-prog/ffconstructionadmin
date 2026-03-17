@@ -155,6 +155,12 @@ export default function Cheques() {
         </div>
       )}
 
+      <ImportChequesDialog
+        open={showImport}
+        onClose={() => setShowImport(false)}
+        onImported={() => { qc.invalidateQueries({ queryKey: ["cheques"] }); setShowImport(false); }}
+      />
+
       {showForm && (
         <ChequeFormDialog
           open={showForm}
