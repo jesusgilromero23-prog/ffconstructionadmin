@@ -1,0 +1,58 @@
+{
+  "name": "GastoTarjeta",
+  "type": "object",
+  "properties": {
+    "tarjeta": {
+      "type": "string",
+      "description": "Nombre o \u00faltimos 4 d\u00edgitos de la tarjeta"
+    },
+    "descripcion": {
+      "type": "string",
+      "description": "Descripci\u00f3n del gasto"
+    },
+    "categoria": {
+      "type": "string",
+      "enum": [
+        "gasolina",
+        "oficina",
+        "materiales",
+        "viajes",
+        "comidas",
+        "servicios",
+        "otros"
+      ],
+      "description": "Categor\u00eda del gasto"
+    },
+    "monto": {
+      "type": "number",
+      "description": "Monto del gasto"
+    },
+    "fecha": {
+      "type": "string",
+      "format": "date",
+      "description": "Fecha del gasto"
+    },
+    "mes": {
+      "type": "number",
+      "description": "Mes del gasto (1-12)"
+    },
+    "anio": {
+      "type": "number",
+      "description": "A\u00f1o del gasto"
+    },
+    "comercio": {
+      "type": "string",
+      "description": "Nombre del comercio"
+    },
+    "notas": {
+      "type": "string",
+      "description": "Notas adicionales"
+    }
+  },
+  "required": [
+    "tarjeta",
+    "descripcion",
+    "monto",
+    "fecha"
+  ]
+}

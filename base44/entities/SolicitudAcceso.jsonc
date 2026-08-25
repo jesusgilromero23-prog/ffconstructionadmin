@@ -1,0 +1,35 @@
+{
+  "name": "SolicitudAcceso",
+  "type": "object",
+  "properties": {
+    "usuario_email": {
+      "type": "string"
+    },
+    "usuario_nombre": {
+      "type": "string"
+    },
+    "motivo": {
+      "type": "string"
+    },
+    "estado": {
+      "type": "string",
+      "enum": [
+        "pendiente",
+        "aprobado",
+        "rechazado"
+      ],
+      "default": "pendiente"
+    },
+    "respuesta_admin": {
+      "type": "string"
+    },
+    "fecha_respuesta": {
+      "type": "string",
+      "format": "date"
+    }
+  },
+  "required": [
+    "usuario_email",
+    "usuario_nombre"
+  ]
+}

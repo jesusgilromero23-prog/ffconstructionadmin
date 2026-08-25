@@ -1,0 +1,66 @@
+{
+  "name": "Prestamo",
+  "type": "object",
+  "properties": {
+    "descripcion": {
+      "type": "string",
+      "description": "Descripci\u00f3n del pr\u00e9stamo"
+    },
+    "entidad": {
+      "type": "string",
+      "description": "Banco o entidad prestamista"
+    },
+    "monto_adquirido": {
+      "type": "number",
+      "description": "Monto del pr\u00e9stamo/cr\u00e9dito"
+    },
+    "fecha_adquisicion": {
+      "type": "string",
+      "format": "date"
+    },
+    "mes": {
+      "type": "number",
+      "description": "Mes (1-12)"
+    },
+    "anio": {
+      "type": "number",
+      "description": "A\u00f1o"
+    },
+    "tipo": {
+      "type": "string",
+      "enum": [
+        "prestamo_bancario",
+        "linea_credito",
+        "tarjeta_credito",
+        "prestamo_personal",
+        "otro"
+      ],
+      "default": "prestamo_bancario"
+    },
+    "tasa_interes": {
+      "type": "number",
+      "description": "Tasa de inter\u00e9s %"
+    },
+    "plazo_meses": {
+      "type": "number",
+      "description": "Plazo en meses"
+    },
+    "estado": {
+      "type": "string",
+      "enum": [
+        "activo",
+        "pagado",
+        "vencido"
+      ],
+      "default": "activo"
+    },
+    "notas": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "descripcion",
+    "monto_adquirido",
+    "fecha_adquisicion"
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "name": "PagoPrestamo",
+  "type": "object",
+  "properties": {
+    "prestamo_id": {
+      "type": "string",
+      "description": "ID del dep\u00f3sito tipo pr\u00e9stamo al que corresponde"
+    },
+    "prestamo_descripcion": {
+      "type": "string",
+      "description": "Descripci\u00f3n del pr\u00e9stamo (referencia)"
+    },
+    "numero_cheque": {
+      "type": "string",
+      "description": "N\u00famero de cheque con el que se pag\u00f3"
+    },
+    "monto": {
+      "type": "number",
+      "description": "Monto pagado"
+    },
+    "fecha": {
+      "type": "string",
+      "format": "date",
+      "description": "Fecha del pago"
+    },
+    "mes": {
+      "type": "number"
+    },
+    "anio": {
+      "type": "number"
+    },
+    "notas": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "prestamo_id",
+    "monto",
+    "fecha"
+  ]
+}

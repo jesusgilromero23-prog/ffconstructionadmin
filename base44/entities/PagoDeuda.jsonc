@@ -1,0 +1,45 @@
+{
+  "name": "PagoDeuda",
+  "type": "object",
+  "properties": {
+    "descripcion": {
+      "type": "string",
+      "description": "Descripci\u00f3n del pago"
+    },
+    "prestamo_descripcion": {
+      "type": "string",
+      "description": "A qu\u00e9 pr\u00e9stamo corresponde"
+    },
+    "monto": {
+      "type": "number",
+      "description": "Monto pagado"
+    },
+    "fecha": {
+      "type": "string",
+      "format": "date"
+    },
+    "mes": {
+      "type": "number"
+    },
+    "anio": {
+      "type": "number"
+    },
+    "tipo": {
+      "type": "string",
+      "enum": [
+        "capital",
+        "interes",
+        "ambos"
+      ],
+      "default": "ambos"
+    },
+    "notas": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "descripcion",
+    "monto",
+    "fecha"
+  ]
+}

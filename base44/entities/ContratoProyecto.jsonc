@@ -1,0 +1,65 @@
+{
+  "name": "ContratoProyecto",
+  "type": "object",
+  "properties": {
+    "proyecto_nombre": {
+      "type": "string",
+      "description": "Nombre del proyecto al que pertenece"
+    },
+    "tipo_contrato": {
+      "type": "string",
+      "enum": [
+        "drywall",
+        "pintura",
+        "piso",
+        "plomeria",
+        "electricidad",
+        "estructura",
+        "acabados",
+        "techo",
+        "general",
+        "otros"
+      ],
+      "description": "Tipo de contrato"
+    },
+    "descripcion": {
+      "type": "string",
+      "description": "Descripci\u00f3n del contrato"
+    },
+    "monto_contrato": {
+      "type": "number",
+      "description": "Monto a cobrar al General Contractor (ingreso)"
+    },
+    "general_contractor": {
+      "type": "string",
+      "description": "General Contractor"
+    },
+    "fecha_contrato": {
+      "type": "string",
+      "format": "date"
+    },
+    "estado": {
+      "type": "string",
+      "enum": [
+        "activo",
+        "completado",
+        "cancelado"
+      ],
+      "default": "activo"
+    },
+    "mes": {
+      "type": "number"
+    },
+    "anio": {
+      "type": "number"
+    },
+    "notas": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "proyecto_nombre",
+    "tipo_contrato",
+    "monto_contrato"
+  ]
+}

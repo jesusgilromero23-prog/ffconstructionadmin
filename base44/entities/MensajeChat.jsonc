@@ -1,0 +1,30 @@
+{
+  "name": "MensajeChat",
+  "type": "object",
+  "properties": {
+    "usuario_email": {
+      "type": "string"
+    },
+    "usuario_nombre": {
+      "type": "string"
+    },
+    "mensaje": {
+      "type": "string"
+    },
+    "respuesta_admin": {
+      "type": "string"
+    },
+    "respondido": {
+      "type": "boolean",
+      "default": false
+    },
+    "leido_admin": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "required": [
+    "usuario_email",
+    "mensaje"
+  ]
+}

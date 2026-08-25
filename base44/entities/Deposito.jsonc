@@ -1,0 +1,70 @@
+{
+  "name": "Deposito",
+  "type": "object",
+  "properties": {
+    "descripcion": {
+      "type": "string",
+      "description": "Descripci\u00f3n del dep\u00f3sito"
+    },
+    "monto": {
+      "type": "number",
+      "description": "Monto del dep\u00f3sito"
+    },
+    "fecha": {
+      "type": "string",
+      "format": "date",
+      "description": "Fecha del dep\u00f3sito"
+    },
+    "mes": {
+      "type": "number",
+      "description": "Mes (1-12)"
+    },
+    "anio": {
+      "type": "number",
+      "description": "A\u00f1o"
+    },
+    "tipo": {
+      "type": "string",
+      "enum": [
+        "pago_cliente",
+        "deposito_bancario",
+        "prestamo",
+        "inversion",
+        "otro"
+      ],
+      "default": "pago_cliente"
+    },
+    "fuente": {
+      "type": "string",
+      "description": "Fuente o cliente"
+    },
+    "banco": {
+      "type": "string",
+      "description": "Banco donde se deposit\u00f3"
+    },
+    "proyecto_nombre": {
+      "type": "string",
+      "description": "Proyecto al que corresponde este dep\u00f3sito (opcional)"
+    },
+    "prestamo_entidad": {
+      "type": "string",
+      "description": "Entidad prestamista (solo si tipo=prestamo)"
+    },
+    "prestamo_tasa": {
+      "type": "number",
+      "description": "Tasa de inter\u00e9s % (solo si tipo=prestamo)"
+    },
+    "prestamo_plazo": {
+      "type": "number",
+      "description": "Plazo en meses (solo si tipo=prestamo)"
+    },
+    "notas": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "descripcion",
+    "monto",
+    "fecha"
+  ]
+}

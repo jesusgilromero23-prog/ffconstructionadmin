@@ -1,0 +1,48 @@
+{
+  "name": "GastoProyecto",
+  "type": "object",
+  "properties": {
+    "proyecto": {
+      "type": "string",
+      "description": "Nombre del proyecto"
+    },
+    "tipo_gasto": {
+      "type": "string",
+      "enum": [
+        "labor",
+        "material",
+        "operativo",
+        "labor_extra"
+      ],
+      "description": "Tipo de gasto del proyecto"
+    },
+    "descripcion": {
+      "type": "string"
+    },
+    "monto": {
+      "type": "number"
+    },
+    "fecha": {
+      "type": "string",
+      "format": "date"
+    },
+    "mes": {
+      "type": "number"
+    },
+    "anio": {
+      "type": "number"
+    },
+    "proveedor": {
+      "type": "string"
+    },
+    "notas": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "proyecto",
+    "tipo_gasto",
+    "monto",
+    "fecha"
+  ]
+}

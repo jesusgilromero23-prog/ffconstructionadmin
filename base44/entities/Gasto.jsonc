@@ -1,0 +1,53 @@
+{
+  "name": "Gasto",
+  "type": "object",
+  "properties": {
+    "descripcion": {
+      "type": "string",
+      "description": "Descripci\u00f3n del gasto"
+    },
+    "categoria": {
+      "type": "string",
+      "enum": [
+        "gasolina",
+        "vehiculos",
+        "oficina",
+        "materiales",
+        "seguros",
+        "servicios",
+        "comida",
+        "inversiones",
+        "otros"
+      ],
+      "description": "Categor\u00eda del gasto"
+    },
+    "monto": {
+      "type": "number"
+    },
+    "fecha": {
+      "type": "string",
+      "format": "date"
+    },
+    "mes": {
+      "type": "number"
+    },
+    "anio": {
+      "type": "number"
+    },
+    "proveedor": {
+      "type": "string"
+    },
+    "comprobante_url": {
+      "type": "string"
+    },
+    "notas": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "descripcion",
+    "categoria",
+    "monto",
+    "fecha"
+  ]
+}

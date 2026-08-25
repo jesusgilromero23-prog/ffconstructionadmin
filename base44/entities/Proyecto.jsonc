@@ -1,0 +1,41 @@
+{
+  "name": "Proyecto",
+  "type": "object",
+  "properties": {
+    "nombre": {
+      "type": "string",
+      "description": "Nombre del proyecto"
+    },
+    "descripcion": {
+      "type": "string"
+    },
+    "cliente": {
+      "type": "string",
+      "description": "Cliente principal"
+    },
+    "estado": {
+      "type": "string",
+      "enum": [
+        "en_ejecucion",
+        "completado",
+        "pausado",
+        "cancelado"
+      ],
+      "default": "en_ejecucion"
+    },
+    "fecha_inicio": {
+      "type": "string",
+      "format": "date"
+    },
+    "fecha_fin": {
+      "type": "string",
+      "format": "date"
+    },
+    "notas": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "nombre"
+  ]
+}

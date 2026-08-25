@@ -1,0 +1,60 @@
+{
+  "name": "Cheque",
+  "type": "object",
+  "properties": {
+    "numero_cheque": {
+      "type": "number",
+      "description": "N\u00famero consecutivo del cheque"
+    },
+    "beneficiario": {
+      "type": "string",
+      "description": "Nombre del empleado/beneficiario"
+    },
+    "monto": {
+      "type": "number",
+      "description": "Monto del cheque"
+    },
+    "fecha_emision": {
+      "type": "string",
+      "format": "date",
+      "description": "Fecha de emisi\u00f3n"
+    },
+    "concepto": {
+      "type": "string",
+      "description": "Concepto del cheque"
+    },
+    "estado": {
+      "type": "string",
+      "enum": [
+        "emitido",
+        "cobrado",
+        "cancelado",
+        "pendiente"
+      ],
+      "default": "emitido",
+      "description": "Estado del cheque"
+    },
+    "banco": {
+      "type": "string",
+      "description": "Banco emisor"
+    },
+    "mes": {
+      "type": "number",
+      "description": "Mes de emisi\u00f3n (1-12)"
+    },
+    "anio": {
+      "type": "number",
+      "description": "A\u00f1o de emisi\u00f3n"
+    },
+    "notas": {
+      "type": "string",
+      "description": "Notas adicionales"
+    }
+  },
+  "required": [
+    "numero_cheque",
+    "beneficiario",
+    "monto",
+    "fecha_emision"
+  ]
+}
