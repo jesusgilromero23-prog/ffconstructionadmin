@@ -28,17 +28,17 @@ export default function KbvSignature() {
           display: flex;
           align-items: center;
           justify-content: center;
-          min-height: 76px;
-          padding: 14px 18px;
-          border-top: 1px solid rgba(148, 163, 184, 0.14);
-          background: radial-gradient(circle at 50% 0%, rgba(59, 130, 246, 0.08), transparent 48%), linear-gradient(180deg, #0d1220 0%, #090d18 100%);
-          box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.025);
+          min-height: 0;
+          padding: 7px 12px;
+          border: 0;
+          background: transparent;
+          box-shadow: none;
         }
         .kbv-signature__link {
           display: inline-flex;
           align-items: center;
           justify-content: center;
-          gap: 12px;
+          gap: 8px;
           max-width: 100%;
           color: inherit;
           text-decoration: none;
@@ -52,8 +52,8 @@ export default function KbvSignature() {
           position: relative;
           display: inline-flex;
           flex: 0 0 auto;
-          width: 48px;
-          height: 48px;
+          width: 30px;
+          height: 30px;
           align-items: center;
           justify-content: center;
         }
@@ -67,16 +67,16 @@ export default function KbvSignature() {
           border-radius: 50%;
           background: linear-gradient(90deg, rgba(168, 85, 247, 0.42), rgba(14, 165, 233, 0.5));
           filter: blur(6px);
-          opacity: 0.72;
+          opacity: 0;
         }
         .kbv-signature__cube {
           position: relative;
           z-index: 1;
           display: block;
-          width: 48px;
-          height: 48px;
+          width: 30px;
+          height: 30px;
           object-fit: contain;
-          filter: drop-shadow(0 7px 8px rgba(14, 165, 233, 0.2));
+          filter: drop-shadow(0 3px 4px rgba(15, 23, 42, 0.18));
           animation: kbv-signature-float 4s ease-in-out infinite;
           transform-origin: 50% 60%;
         }
@@ -88,23 +88,23 @@ export default function KbvSignature() {
           min-width: 0;
           white-space: nowrap;
           font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-          font-size: clamp(10px, 1.2vw, 12px);
+          font-size: clamp(9px, 1vw, 10px);
           font-weight: 700;
           line-height: 1.2;
-          letter-spacing: 0.14em;
+          letter-spacing: 0.08em;
         }
         .kbv-signature__powered { color: #aeb7c6; }
-        .kbv-signature__brand { color: #e8b43f; text-shadow: 0 0 12px rgba(232, 180, 63, 0.12); }
+        .kbv-signature__brand { color: #e8b43f; text-shadow: none; }
         .kbv-signature__mark { margin-left: -6px; color: #d7a933; font-size: 7px; line-height: 1; vertical-align: super; }
         @keyframes kbv-signature-float {
-          0%, 100% { transform: translateY(1px); }
-          50% { transform: translateY(-4px); }
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(-2px); }
         }
         @media (max-width: 520px) {
-          .kbv-signature { min-height: 68px; padding: 11px 12px; }
-          .kbv-signature__link { gap: 8px; }
-          .kbv-signature__cube-wrap, .kbv-signature__cube { width: 40px; height: 40px; }
-          .kbv-signature__copy { gap: 5px; font-size: clamp(8px, 2.45vw, 10px); letter-spacing: 0.08em; }
+          .kbv-signature { min-height: 0; padding: 6px 10px; }
+          .kbv-signature__link { gap: 6px; }
+          .kbv-signature__cube-wrap, .kbv-signature__cube { width: 26px; height: 26px; }
+          .kbv-signature__copy { gap: 4px; font-size: clamp(8px, 2.15vw, 9px); letter-spacing: 0.06em; }
           .kbv-signature__mark { margin-left: -3px; font-size: 6px; }
         }
         @media (prefers-reduced-motion: reduce) {
